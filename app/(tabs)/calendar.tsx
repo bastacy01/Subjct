@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
   monthGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   monthDayItem: {
     width: '14.28%',
@@ -411,12 +411,13 @@ const styles = StyleSheet.create({
   },
   scheduleContainer: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
   },
   scheduleHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   scheduleHeaderText: {
     fontFamily: 'Inter-Bold',

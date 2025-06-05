@@ -75,21 +75,27 @@ export default function ProfileScreen() {
           <View style={styles.detailsContainer}>
             <View style={styles.detailItem}>
               <Text style={styles.detailLabel}>Student ID</Text>
-              <Text style={styles.detailValue}>{user.studentId}</Text>
+              <View style={styles.detailValueContainer}>
+                <Text style={styles.detailValue}>{user.studentId}</Text>
+              </View>
             </View>
             
             <View style={styles.detailDivider} />
             
             <View style={styles.detailItem}>
               <Text style={styles.detailLabel}>Major</Text>
-              <Text style={styles.detailValue}>{user.major}</Text>
+              <View style={styles.detailValueContainer}>
+                <Text style={styles.detailValue}>{user.major}</Text>
+              </View>
             </View>
             
             <View style={styles.detailDivider} />
             
             <View style={styles.detailItem}>
               <Text style={styles.detailLabel}>Year</Text>
-              <Text style={styles.detailValue}>{user.year}</Text>
+              <View style={styles.detailValueContainer}>
+                <Text style={styles.detailValue}>{user.year}</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -205,10 +211,15 @@ const styles = StyleSheet.create({
     color: Colors.light.neutral[500],
     marginBottom: 4,
   },
+  detailValueContainer: {
+    minHeight: 40,
+    justifyContent: 'center',
+  },
   detailValue: {
     fontFamily: 'Inter-Medium',
     fontSize: 14,
     color: Colors.light.neutral[900],
+    textAlign: 'center',
   },
   editButton: {
     backgroundColor: Colors.light.primary[50],
