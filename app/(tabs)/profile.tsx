@@ -60,7 +60,7 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Profile</Text>
       </View>
@@ -105,32 +105,34 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
       
-      <View style={styles.menuSection}>
-        {menuItems.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.menuItem}
-            onPress={item.action}
+      <ScrollView style={styles.menuSection} showsVerticalScrollIndicator={false}>
+        <View style={styles.menuContent}>
+          {menuItems.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.menuItem}
+              onPress={item.action}
+            >
+              <View style={styles.menuItemLeft}>
+                {item.icon}
+                <Text style={styles.menuItemText}>{item.title}</Text>
+              </View>
+              <ChevronRight size={20} color={Colors.light.neutral[400]} />
+            </TouchableOpacity>
+          ))}
+          
+          <TouchableOpacity 
+            style={styles.logoutButton}
+            onPress={handleLogout}
           >
-            <View style={styles.menuItemLeft}>
-              {item.icon}
-              <Text style={styles.menuItemText}>{item.title}</Text>
-            </View>
-            <ChevronRight size={20} color={Colors.light.neutral[400]} />
+            <LogOut size={20} color={Colors.light.error[500]} />
+            <Text style={styles.logoutText}>Log Out</Text>
           </TouchableOpacity>
-        ))}
-      </View>
-      
-      <TouchableOpacity 
-        style={styles.logoutButton}
-        onPress={handleLogout}
-      >
-        <LogOut size={20} color={Colors.light.error[500]} />
-        <Text style={styles.logoutText}>Log Out</Text>
-      </TouchableOpacity>
-      
-      <Text style={styles.versionText}>Version 1.0.0</Text>
-    </ScrollView>
+          
+          <Text style={styles.versionText}>Version 1.0.0</Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -235,9 +237,12 @@ const styles = StyleSheet.create({
     color: Colors.light.primary[600],
   },
   menuSection: {
+    flex: 1,
+    marginTop: 24,
+  },
+  menuContent: {
     backgroundColor: 'white',
     marginHorizontal: 16,
-    marginTop: 24,
     borderRadius: 16,
     overflow: 'hidden',
     shadowColor: '#000',
@@ -270,12 +275,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 24,
-    marginHorizontal: 16,
     backgroundColor: Colors.light.neutral[100],
     paddingVertical: 16,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.light.neutral[200],
+    marginHorizontal: 16,
   },
   logoutText: {
     fontFamily: 'Inter-Medium',
