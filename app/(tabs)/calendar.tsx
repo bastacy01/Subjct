@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Clock, MapPin, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react-native';
+import { Clock, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react-native';
 
 export default function CalendarScreen() {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
@@ -61,7 +61,6 @@ export default function CalendarScreen() {
       courseName: 'Introduction to Computer Science',
       startTime: '10:00 AM',
       endTime: '10:50 AM',
-      location: 'Science Building 101',
       type: 'lecture',
     },
     {
@@ -70,7 +69,6 @@ export default function CalendarScreen() {
       courseName: 'Calculus III',
       startTime: '11:00 AM',
       endTime: '12:15 PM',
-      location: 'Math Building 305',
       type: 'lecture',
     },
     {
@@ -79,7 +77,6 @@ export default function CalendarScreen() {
       courseName: 'University Physics I',
       startTime: '1:00 PM',
       endTime: '1:50 PM',
-      location: 'Physics Building 210',
       type: 'lecture',
     },
   ];
@@ -228,7 +225,6 @@ export default function CalendarScreen() {
 
         {schedule.map((item) => (
           <View key={item.id} style={styles.scheduleItem}>
-            <View style={[styles.itemColorBar, item.type === 'lab' ? styles.labColorBar : styles.lectureColorBar]} />
             <View style={styles.scheduleItemContent}>
               <View style={styles.scheduleItemHeader}>
                 <Text style={styles.courseCode}>{item.courseCode}</Text>
@@ -245,11 +241,6 @@ export default function CalendarScreen() {
                   <Text style={styles.detailText}>
                     {item.startTime} - {item.endTime}
                   </Text>
-                </View>
-                
-                <View style={styles.detailItem}>
-                  <MapPin size={16} color={Colors.light.neutral[600]} />
-                  <Text style={styles.detailText}>{item.location}</Text>
                 </View>
               </View>
             </View>
@@ -337,7 +328,7 @@ const styles = StyleSheet.create({
   },
   dayItem: {
     width: 64,
-    height: 80,
+    height: 64,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
@@ -433,33 +424,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     borderRadius: 12,
-    marginBottom: 16,
+    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
-    overflow: 'hidden',
-  },
-  itemColorBar: {
-    width: 6,
-    height: '100%',
-  },
-  lectureColorBar: {
-    backgroundColor: Colors.light.primary[600],
-  },
-  labColorBar: {
-    backgroundColor: Colors.light.accent[500],
   },
   scheduleItemContent: {
     flex: 1,
-    padding: 16,
+    padding: 14,
   },
   scheduleItemHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   courseCode: {
     fontFamily: 'Inter-Bold',
@@ -477,12 +457,13 @@ const styles = StyleSheet.create({
   },
   courseName: {
     fontFamily: 'Inter-Medium',
-    fontSize: 16,
+    fontSize: 14,
     color: Colors.light.neutral[900],
-    marginBottom: 12,
+    marginBottom: 8,
   },
   scheduleItemDetails: {
-    gap: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   detailItem: {
     flexDirection: 'row',
