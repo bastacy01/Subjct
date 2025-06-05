@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
   },
   weekDayHeader: {
     flexDirection: 'row',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   weekDayText: {
     flex: 1,
@@ -374,21 +374,24 @@ const styles = StyleSheet.create({
   monthGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginBottom: 16,
   },
   monthDayItem: {
     width: '14.28%',
-    aspectRatio: 1,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    marginBottom: 8,
   },
   selectedMonthDay: {
     backgroundColor: Colors.light.primary[600],
+    borderRadius: 8,
   },
   todayMonthDay: {
     backgroundColor: Colors.light.primary[50],
     borderWidth: 1,
     borderColor: Colors.light.primary[400],
+    borderRadius: 8,
   },
   monthDayText: {
     fontFamily: 'Inter-Medium',
@@ -403,7 +406,8 @@ const styles = StyleSheet.create({
   },
   emptyDay: {
     width: '14.28%',
-    aspectRatio: 1,
+    height: 40,
+    marginBottom: 8,
   },
   scheduleContainer: {
     flex: 1,
@@ -421,7 +425,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   scheduleItem: {
-    flexDirection: 'row',
     backgroundColor: 'white',
     borderRadius: 12,
     marginBottom: 12,
