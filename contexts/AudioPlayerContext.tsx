@@ -103,8 +103,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   const handlePlayButtonPress = (lecture: Lecture) => {
     // When play button is pressed, both toggle playback and set as current
     togglePlayback(lecture);
-    setCurrentLecture(lecture);
-    setHighlightedLectureId(lecture.id);
+    // Note: togglePlayback already sets currentLecture and highlightedLectureId
   };
 
   const handleVolumeChange = async (newVolume: number) => {

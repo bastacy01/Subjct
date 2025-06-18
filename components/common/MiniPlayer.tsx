@@ -12,6 +12,7 @@ const MiniPlayer: React.FC = () => {
     togglePlayback 
   } = useAudioPlayer();
 
+  // Don't render anything if no lecture is selected
   if (!currentLecture) {
     return null;
   }
