@@ -5,22 +5,15 @@ import Colors from '@/constants/Colors';
 import { Chrome as Home, BookOpen, Calendar, User } from 'lucide-react-native';
 import MiniPlayer from '@/components/common/MiniPlayer';
 import PlayerModal from '@/components/common/PlayerModal';
-import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 
 export default function TabLayout() {
-  const { currentLecture } = useAudioPlayer();
-
   return (
     <View style={{ flex: 1 }}>
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors.light.primary[600],
           tabBarInactiveTintColor: Colors.light.neutral[400],
-          tabBarStyle: [
-            styles.tabBar,
-            // Add bottom padding when mini player is visible
-            currentLecture && { paddingBottom: 88 }
-          ],
+          tabBarStyle: styles.tabBar,
           tabBarLabelStyle: styles.tabBarLabel,
           headerShown: false,
         }}
@@ -55,7 +48,7 @@ export default function TabLayout() {
         />
       </Tabs>
       
-      {/* Mini Player positioned exactly above tab bar - only when lecture is selected */}
+      {/* Mini Player persists across all tabs */}
       <MiniPlayer />
       
       {/* Player Modal */}

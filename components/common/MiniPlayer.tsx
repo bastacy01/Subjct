@@ -12,7 +12,6 @@ const MiniPlayer: React.FC = () => {
     togglePlayback 
   } = useAudioPlayer();
 
-  // Don't render anything if no lecture is selected
   if (!currentLecture) {
     return null;
   }
@@ -49,7 +48,7 @@ const MiniPlayer: React.FC = () => {
 const styles = StyleSheet.create({
   playerBar: {
     position: 'absolute',
-    bottom: 88, // Position exactly above the tab bar (tab bar height is 88)
+    bottom: 88, // Position exactly above the tab bar
     left: 0,
     right: 0,
     height: 56,
@@ -58,7 +57,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    zIndex: 10, // Ensure it's above other content
   },
   playerInfo: {
     flex: 1,
