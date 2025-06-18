@@ -4,6 +4,7 @@ import Colors from '@/constants/Colors';
 import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X, Volume, VolumeX } from 'lucide-react-native';
 import { Audio } from 'expo-av';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function HomeScreen() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -12,6 +13,8 @@ export default function HomeScreen() {
   const [selectedLecture, setSelectedLecture] = useState<any>(null);
   const [showLectureDetail, setShowLectureDetail] = useState(false);
   const [volume, setVolume] = useState(0.7);
+  const [currentTime, setCurrentTime] = useState(615); // 10:15 in seconds
+  const [totalTime, setTotalTime] = useState(3027); // 50:27 in seconds
 
   const recentLectures = [
     {
@@ -113,6 +116,35 @@ export default function HomeScreen() {
     }
   };
 
+  const handleTimeChange = (newTime: number) => {
+    setCurrentTime(newTime);
+    // In a real app, you would seek to this position in the audio
+    if (sound) {
+      sound.setPositionAsync(newTime * 1000); // Convert to milliseconds
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleProgressPan = (event: any) => {
+    const { locationX } = event.nativeEvent;
+    const progressWidth = 300; // Approximate width of progress bar
+    const progress = Math.max(0, Math.min(1, locationX / progressWidth));
+    const newTime = Math.floor(progress * totalTime);
+    handleTimeChange(newTime);
+  };
+
+  const handleVolumePan = (event: any) => {
+    const { locationX } = event.nativeEvent;
+    const volumeWidth = 200; // Approximate width of volume bar
+    const newVolume = Math.max(0, Math.min(1, locationX / volumeWidth));
+    handleVolumeChange(newVolume);
+  };
+
   useEffect(() => {
     return sound
       ? () => {
@@ -159,7 +191,7 @@ export default function HomeScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Home</Text>
       </View>
@@ -221,12 +253,27 @@ export default function HomeScreen() {
 
                 <View style={styles.playerControlsContainer}>
                   <View style={styles.progressContainer}>
-                    <View style={styles.progressBar}>
-                      <View style={styles.progress} />
-                    </View>
+                    <PanGestureHandler onGestureEvent={handleProgressPan}>
+                      <View style={styles.progressBarContainer}>
+                        <View style={styles.progressBar}>
+                          <View 
+                            style={[
+                              styles.progress, 
+                              { width: `${(currentTime / totalTime) * 100}%` }
+                            ]} 
+                          />
+                          <View
+                            style={[
+                              styles.progressThumb,
+                              { left: `${(currentTime / totalTime) * 100}%` }
+                            ]}
+                          />
+                        </View>
+                      </View>
+                    </PanGestureHandler>
                     <View style={styles.timeContainer}>
-                      <Text style={styles.timeText}>10:15</Text>
-                      <Text style={styles.timeText}>-40:12</Text>
+                      <Text style={styles.timeText}>{formatTime(currentTime)}</Text>
+                      <Text style={styles.timeText}>-{formatTime(totalTime - currentTime)}</Text>
                     </View>
                   </View>
 
@@ -253,27 +300,24 @@ export default function HomeScreen() {
 
                   <View style={styles.volumeContainer}>
                     <VolumeX size={20} color={Colors.light.neutral[600]} />
-                    <View style={styles.volumeSliderContainer}>
-                      <View style={styles.volumeSlider}>
-                        <View 
-                          style={[
-                            styles.volumeProgress, 
-                            { width: `${volume * 100}%` }
-                          ]} 
-                        />
-                        <TouchableOpacity
-                          style={[
-                            styles.volumeThumb,
-                            { left: `${volume * 100}%` }
-                          ]}
-                          onPressIn={(event) => {
-                            // Simple volume control - in a real app you'd implement proper gesture handling
-                            const newVolume = Math.max(0, Math.min(1, volume + 0.1));
-                            handleVolumeChange(newVolume);
-                          }}
-                        />
+                    <PanGestureHandler onGestureEvent={handleVolumePan}>
+                      <View style={styles.volumeSliderContainer}>
+                        <View style={styles.volumeSlider}>
+                          <View 
+                            style={[
+                              styles.volumeProgress, 
+                              { width: `${volume * 100}%` }
+                            ]} 
+                          />
+                          <View
+                            style={[
+                              styles.volumeThumb,
+                              { left: `${volume * 100}%` }
+                            ]}
+                          />
+                        </View>
                       </View>
-                    </View>
+                    </PanGestureHandler>
                     <Volume size={20} color={Colors.light.neutral[600]} />
                   </View>
                 </View>
@@ -310,7 +354,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </TouchableOpacity>
       )}
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -485,19 +529,30 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   progressContainer: {
-    marginBottom: 24,
+    marginBottom: 32,
+  },
+  progressBarContainer: {
+    marginBottom: 8,
   },
   progressBar: {
     height: 4,
     backgroundColor: Colors.light.neutral[200],
     borderRadius: 2,
-    marginBottom: 8,
+    position: 'relative',
   },
   progress: {
-    width: '30%',
     height: '100%',
     backgroundColor: Colors.light.primary[600],
     borderRadius: 2,
+  },
+  progressThumb: {
+    position: 'absolute',
+    top: -6,
+    width: 16,
+    height: 16,
+    backgroundColor: Colors.light.primary[600],
+    borderRadius: 8,
+    marginLeft: -8,
   },
   timeContainer: {
     flexDirection: 'row',
@@ -513,7 +568,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 24,
-    marginBottom: 24,
+    marginBottom: 32,
   },
   controlButton: {
     padding: 8,
