@@ -44,11 +44,7 @@ export default function SchoolSelectScreen() {
     >
       <View style={styles.header}>
         <ProgressBar progress={0.25} style={styles.progressBar} />
-        <Text style={styles.stepText}>Step 1 of 4</Text>
         <Text style={styles.title}>Select Your University</Text>
-        <Text style={styles.subtitle}>
-          Choose your school to connect with your Learning Management System
-        </Text>
       </View>
       
       <View style={styles.dropdownContainer}>
@@ -125,25 +121,13 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   progressBar: {
-    marginBottom: 8,
-  },
-  stepText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: Colors.light.neutral[500],
-    marginBottom: 16,
+    marginBottom: 24,
   },
   title: {
     fontFamily: 'Inter-Bold',
     fontSize: 28,
     color: Colors.light.neutral[900],
     marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: Colors.light.neutral[600],
-    lineHeight: 24,
   },
   dropdownContainer: {
     marginBottom: 24,

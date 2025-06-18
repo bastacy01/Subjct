@@ -113,11 +113,7 @@ export default function LmsAuthScreen() {
         <>
           <View style={styles.header}>
             <ProgressBar progress={0.5} style={styles.progressBar} />
-            <Text style={styles.stepText}>Step 2 of 4</Text>
             <Text style={styles.title}>Connect to Your LMS</Text>
-            <Text style={styles.subtitle}>
-              Sign in to your university's Learning Management System to access your courses
-            </Text>
           </View>
           
           <View style={styles.contentContainer}>
@@ -191,25 +187,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   progressBar: {
-    marginBottom: 8,
-  },
-  stepText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: Colors.light.neutral[500],
-    marginBottom: 16,
+    marginBottom: 24,
   },
   title: {
     fontFamily: 'Inter-Bold',
     fontSize: 28,
     color: Colors.light.neutral[900],
     marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: Colors.light.neutral[600],
-    lineHeight: 24,
   },
   contentContainer: {
     flex: 1,

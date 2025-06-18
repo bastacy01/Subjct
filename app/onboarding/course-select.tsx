@@ -46,11 +46,7 @@ export default function CourseSelectScreen() {
     >
       <View style={styles.header}>
         <ProgressBar progress={0.75} style={styles.progressBar} />
-        <Text style={styles.stepText}>Step 3 of 4</Text>
         <Text style={styles.title}>Select Your Courses</Text>
-        <Text style={styles.subtitle}>
-          Choose the courses you want to track this semester
-        </Text>
       </View>
 
       <View style={styles.semesterSelectorContainer}>
@@ -183,25 +179,13 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 60 : 40,
   },
   progressBar: {
-    marginBottom: 8,
-  },
-  stepText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: Colors.light.neutral[500],
-    marginBottom: 16,
+    marginBottom: 24,
   },
   title: {
     fontFamily: 'Inter-Bold',
     fontSize: 28,
     color: Colors.light.neutral[900],
     marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: Colors.light.neutral[600],
-    lineHeight: 24,
   },
   semesterSelectorContainer: {
     paddingHorizontal: 24,
