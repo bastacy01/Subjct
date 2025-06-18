@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X } from 'lucide-react-native';
+import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X, Volume2 } from 'lucide-react-native';
 import { Audio } from 'expo-av';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
@@ -11,6 +11,7 @@ export default function HomeScreen() {
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [selectedLecture, setSelectedLecture] = useState<any>(null);
   const [showLectureDetail, setShowLectureDetail] = useState(false);
+  const [volume, setVolume] = useState(0.7);
 
   const recentLectures = [
     {
@@ -87,7 +88,7 @@ export default function HomeScreen() {
       setCurrentLecture(lecture);
       const { sound: newSound } = await Audio.Sound.createAsync(
         { uri: 'https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav' },
-        { shouldPlay: true }
+        { shouldPlay: true, volume }
       );
       setSound(newSound);
       setIsPlaying(true);
@@ -102,6 +103,13 @@ export default function HomeScreen() {
     if (currentLecture) {
       setSelectedLecture(currentLecture);
       setShowLectureDetail(true);
+    }
+  };
+
+  const handleVolumeChange = async (newVolume: number) => {
+    setVolume(newVolume);
+    if (sound) {
+      await sound.setVolumeAsync(newVolume);
     }
   };
 
@@ -220,6 +228,32 @@ export default function HomeScreen() {
                       <Text style={styles.timeText}>10:15</Text>
                       <Text style={styles.timeText}>-40:12</Text>
                     </View>
+                  </View>
+
+                  <View style={styles.volumeContainer}>
+                    <Volume2 size={20} color={Colors.light.neutral[600]} />
+                    <View style={styles.volumeSliderContainer}>
+                      <View style={styles.volumeSlider}>
+                        <View 
+                          style={[
+                            styles.volumeProgress, 
+                            { width: `${volume * 100}%` }
+                          ]} 
+                        />
+                        <TouchableOpacity
+                          style={[
+                            styles.volumeThumb,
+                            { left: `${volume * 100}%` }
+                          ]}
+                          onPressIn={(event) => {
+                            // Simple volume control - in a real app you'd implement proper gesture handling
+                            const newVolume = Math.max(0, Math.min(1, volume + 0.1));
+                            handleVolumeChange(newVolume);
+                          }}
+                        />
+                      </View>
+                    </View>
+                    <Text style={styles.volumeText}>{Math.round(volume * 100)}%</Text>
                   </View>
 
                   <View style={styles.playerControls}>
@@ -473,6 +507,43 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Regular',
     fontSize: 12,
     color: Colors.light.neutral[600],
+  },
+  volumeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingHorizontal: 4,
+  },
+  volumeSliderContainer: {
+    flex: 1,
+    marginHorizontal: 16,
+  },
+  volumeSlider: {
+    height: 4,
+    backgroundColor: Colors.light.neutral[200],
+    borderRadius: 2,
+    position: 'relative',
+  },
+  volumeProgress: {
+    height: '100%',
+    backgroundColor: Colors.light.primary[600],
+    borderRadius: 2,
+  },
+  volumeThumb: {
+    position: 'absolute',
+    top: -6,
+    width: 16,
+    height: 16,
+    backgroundColor: Colors.light.primary[600],
+    borderRadius: 8,
+    marginLeft: -8,
+  },
+  volumeText: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 12,
+    color: Colors.light.neutral[600],
+    minWidth: 32,
+    textAlign: 'right',
   },
   playerControls: {
     flexDirection: 'row',
