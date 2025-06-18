@@ -84,18 +84,18 @@ export default function SplashScreen() {
     >
       <Animated.View style={[styles.logoContainer, logoStyle]}>
         <Image 
-          source={{ uri: 'https://images.pexels.com/photos/6147369/pexels-photo-6147369.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' }}
+          source={{ uri: 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=1' }}
           style={styles.logo}
           resizeMode="cover"
         />
       </Animated.View>
       
       <Animated.Text style={[styles.title, titleStyle]}>
-        CampusConnect
+        Subjct
       </Animated.Text>
       
       <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-        Your academic journey, simplified
+        Listen to Lectures
       </Animated.Text>
     </Animated.View>
   );
