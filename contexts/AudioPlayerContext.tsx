@@ -20,6 +20,7 @@ interface AudioPlayerContextType {
   totalTime: number;
   selectedLecture: Lecture | null;
   showLectureDetail: boolean;
+  highlightedLectureId: string | null;
   setCurrentLecture: (lecture: Lecture | null) => void;
   setIsPlaying: (playing: boolean) => void;
   setSound: (sound: Audio.Sound | null) => void;
@@ -28,6 +29,7 @@ interface AudioPlayerContextType {
   setTotalTime: (time: number) => void;
   setSelectedLecture: (lecture: Lecture | null) => void;
   setShowLectureDetail: (show: boolean) => void;
+  setHighlightedLectureId: (id: string | null) => void;
   togglePlayback: (lecture: Lecture) => Promise<void>;
   handleLectureSelect: (lecture: Lecture) => void;
   handlePlayButtonPress: (lecture: Lecture) => void;
@@ -60,6 +62,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   const [totalTime, setTotalTime] = useState(3027); // 50:27 in seconds
   const [selectedLecture, setSelectedLecture] = useState<Lecture | null>(null);
   const [showLectureDetail, setShowLectureDetail] = useState(false);
+  const [highlightedLectureId, setHighlightedLectureId] = useState<string | null>(null);
 
   const togglePlayback = async (lecture: Lecture) => {
     if (currentLecture?.id === lecture.id) {
@@ -74,6 +77,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
         await sound.unloadAsync();
       }
       setCurrentLecture(lecture);
+      setHighlightedLectureId(lecture.id);
       const { sound: newSound } = await Audio.Sound.createAsync(
         { uri: 'https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav' },
         { shouldPlay: true, volume }
@@ -84,9 +88,9 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   };
 
   const handleLectureSelect = (lecture: Lecture) => {
-    // Only update the current lecture for the mini player
+    // Update both current lecture and highlighted lecture
     setCurrentLecture(lecture);
-    // Don't automatically open the modal
+    setHighlightedLectureId(lecture.id);
   };
 
   const handleMiniPlayerPress = () => {
@@ -100,6 +104,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     // When play button is pressed, both toggle playback and set as current
     togglePlayback(lecture);
     setCurrentLecture(lecture);
+    setHighlightedLectureId(lecture.id);
   };
 
   const handleVolumeChange = async (newVolume: number) => {
@@ -140,6 +145,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     totalTime,
     selectedLecture,
     showLectureDetail,
+    highlightedLectureId,
     setCurrentLecture,
     setIsPlaying,
     setSound,
@@ -148,6 +154,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     setTotalTime,
     setSelectedLecture,
     setShowLectureDetail,
+    setHighlightedLectureId,
     togglePlayback,
     handleLectureSelect,
     handlePlayButtonPress,

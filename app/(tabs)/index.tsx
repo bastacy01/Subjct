@@ -8,6 +8,7 @@ export default function HomeScreen() {
   const { 
     currentLecture, 
     isPlaying, 
+    highlightedLectureId,
     handleLectureSelect, 
     handlePlayButtonPress 
   } = useAudioPlayer();
@@ -77,7 +78,7 @@ export default function HomeScreen() {
       key={lecture.id}
       style={[
         styles.lectureCard,
-        currentLecture?.id === lecture.id && styles.activeLectureCard
+        highlightedLectureId === lecture.id && styles.activeLectureCard
       ]}
       onPress={() => handleLectureSelect(lecture)}
     >

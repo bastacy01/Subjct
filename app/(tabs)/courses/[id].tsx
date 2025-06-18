@@ -11,6 +11,7 @@ export default function CourseDetailScreen() {
   const { 
     currentLecture, 
     isPlaying, 
+    highlightedLectureId,
     handleLectureSelect, 
     handlePlayButtonPress,
     setSelectedLecture,
@@ -106,7 +107,7 @@ export default function CourseDetailScreen() {
               key={lecture.id}
               style={[
                 styles.lectureCard,
-                currentLecture?.id === lecture.id && styles.activeLectureCard
+                highlightedLectureId === lecture.id && styles.activeLectureCard
               ]}
               onPress={() => handleLectureSelect(lecture)}
             >

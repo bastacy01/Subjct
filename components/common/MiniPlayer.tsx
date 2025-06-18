@@ -47,10 +47,6 @@ const MiniPlayer: React.FC = () => {
 
 const styles = StyleSheet.create({
   playerBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     height: 56,
     backgroundColor: Colors.light.primary[600],
     flexDirection: 'row',
