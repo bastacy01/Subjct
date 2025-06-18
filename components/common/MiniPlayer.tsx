@@ -47,12 +47,17 @@ const MiniPlayer: React.FC = () => {
 
 const styles = StyleSheet.create({
   playerBar: {
+    position: 'absolute',
+    bottom: 88, // Position exactly above the tab bar (tab bar height is 88)
+    left: 0,
+    right: 0,
     height: 56,
     backgroundColor: Colors.light.primary[600],
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 8,
+    zIndex: 10, // Ensure it's above other content
   },
   playerInfo: {
     flex: 1,

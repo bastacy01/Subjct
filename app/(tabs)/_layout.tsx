@@ -9,48 +9,46 @@ import PlayerModal from '@/components/common/PlayerModal';
 export default function TabLayout() {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        <Tabs
-          screenOptions={{
-            tabBarActiveTintColor: Colors.light.primary[600],
-            tabBarInactiveTintColor: Colors.light.neutral[400],
-            tabBarStyle: styles.tabBar,
-            tabBarLabelStyle: styles.tabBarLabel,
-            headerShown: false,
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors.light.primary[600],
+          tabBarInactiveTintColor: Colors.light.neutral[400],
+          tabBarStyle: styles.tabBar,
+          tabBarLabelStyle: styles.tabBarLabel,
+          headerShown: false,
+        }}
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
           }}
-        >
-          <Tabs.Screen
-            name="index"
-            options={{
-              title: 'Home',
-              tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
-            }}
-          />
-          <Tabs.Screen
-            name="courses"
-            options={{
-              title: 'Courses',
-              tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
-            }}
-          />
-          <Tabs.Screen
-            name="calendar"
-            options={{
-              title: 'Calendar',
-              tabBarIcon: ({ color, size }) => <Calendar size={size} color={color} />,
-            }}
-          />
-          <Tabs.Screen
-            name="profile"
-            options={{
-              title: 'Profile',
-              tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
-            }}
-          />
-        </Tabs>
-      </View>
+        />
+        <Tabs.Screen
+          name="courses"
+          options={{
+            title: 'Courses',
+            tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="calendar"
+          options={{
+            title: 'Calendar',
+            tabBarIcon: ({ color, size }) => <Calendar size={size} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: 'Profile',
+            tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
+          }}
+        />
+      </Tabs>
       
-      {/* Mini Player positioned above tab bar */}
+      {/* Mini Player positioned exactly above tab bar */}
       <MiniPlayer />
       
       {/* Player Modal */}
