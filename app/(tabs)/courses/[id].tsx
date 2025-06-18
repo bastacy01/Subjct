@@ -26,37 +26,53 @@ export default function CourseDetailScreen() {
       title: 'Introduction to the Course',
       duration: '50:00',
       date: '2024-03-15',
-      description: 'Overview of course objectives and syllabus review.'
+      description: 'Overview of course objectives and syllabus review.',
+      instructor: course.instructor,
+      course: course.code
     },
     {
       id: '2',
       title: 'Fundamental Concepts',
       duration: '45:30',
       date: '2024-03-17',
-      description: 'Introduction to basic principles and terminology.'
+      description: 'Introduction to basic principles and terminology.',
+      instructor: course.instructor,
+      course: course.code
     },
     {
       id: '3',
       title: 'Advanced Topics Part 1',
       duration: '55:15',
       date: '2024-03-20',
-      description: 'Deep dive into advanced concepts and their applications.'
+      description: 'Deep dive into advanced concepts and their applications.',
+      instructor: course.instructor,
+      course: course.code
     },
     {
       id: '4',
       title: 'Problem Solving Session',
       duration: '48:20',
       date: '2024-03-22',
-      description: 'Interactive session working through complex problems.'
+      description: 'Interactive session working through complex problems.',
+      instructor: course.instructor,
+      course: course.code
     },
     {
       id: '5',
       title: 'Case Studies',
       duration: '52:45',
       date: '2024-03-24',
-      description: 'Analysis of real-world applications and examples.'
+      description: 'Analysis of real-world applications and examples.',
+      instructor: course.instructor,
+      course: course.code
     }
   ];
+
+  const handleLecturePress = (lecture: any) => {
+    // This would open the modal player sheet
+    // For now, we'll just log it
+    console.log('Opening lecture:', lecture);
+  };
 
   return (
     <View style={styles.container}>
@@ -80,6 +96,7 @@ export default function CourseDetailScreen() {
             <TouchableOpacity 
               key={lecture.id}
               style={styles.lectureCard}
+              onPress={() => handleLecturePress(lecture)}
             >
               <View style={styles.lectureInfo}>
                 <Text style={styles.lectureTitle}>{lecture.title}</Text>
@@ -162,7 +179,7 @@ const styles = StyleSheet.create({
   },
   lecturesContent: {
     padding: 24,
-    paddingTop: 8, // Added small padding at the top
+    paddingTop: 8,
   },
   lectureCard: {
     flexDirection: 'row',

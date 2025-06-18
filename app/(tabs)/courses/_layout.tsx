@@ -20,7 +20,7 @@ export default function CoursesLayout() {
           },
           headerTintColor: 'white',
           headerLeftContainerStyle: {
-            paddingLeft: 8, // Added padding to move the back arrow right
+            paddingLeft: 8,
           },
         }}
       />

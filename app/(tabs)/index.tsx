@@ -4,7 +4,7 @@ import Colors from '@/constants/Colors';
 import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X, Volume2, VolumeX } from 'lucide-react-native';
 import { Audio } from 'expo-av';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { PanGestureHandler, GestureHandlerRootView, State } from 'react-native-gesture-handler';
 
 export default function HomeScreen() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -100,6 +100,8 @@ export default function HomeScreen() {
 
   const handleLectureSelect = (lecture: any) => {
     setCurrentLecture(lecture);
+    setSelectedLecture(lecture);
+    setShowLectureDetail(true);
   };
 
   const handleMiniPlayerPress = () => {
@@ -130,19 +132,25 @@ export default function HomeScreen() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleProgressPan = (event: any) => {
-    const { locationX } = event.nativeEvent;
-    const progressWidth = 300; // Approximate width of progress bar
-    const progress = Math.max(0, Math.min(1, locationX / progressWidth));
-    const newTime = Math.floor(progress * totalTime);
-    handleTimeChange(newTime);
+  const handleProgressGesture = (event: any) => {
+    const { state, x } = event.nativeEvent;
+    
+    if (state === State.ACTIVE || state === State.END) {
+      const progressWidth = 280; // Approximate width of progress bar
+      const progress = Math.max(0, Math.min(1, x / progressWidth));
+      const newTime = Math.floor(progress * totalTime);
+      handleTimeChange(newTime);
+    }
   };
 
-  const handleVolumePan = (event: any) => {
-    const { locationX } = event.nativeEvent;
-    const volumeWidth = 200; // Approximate width of volume bar
-    const newVolume = Math.max(0, Math.min(1, locationX / volumeWidth));
-    handleVolumeChange(newVolume);
+  const handleVolumeGesture = (event: any) => {
+    const { state, x } = event.nativeEvent;
+    
+    if (state === State.ACTIVE || state === State.END) {
+      const volumeWidth = 200; // Approximate width of volume bar
+      const newVolume = Math.max(0, Math.min(1, x / volumeWidth));
+      handleVolumeChange(newVolume);
+    }
   };
 
   useEffect(() => {
@@ -253,8 +261,8 @@ export default function HomeScreen() {
 
                 <View style={styles.playerControlsContainer}>
                   <View style={styles.progressContainer}>
-                    <PanGestureHandler onGestureEvent={handleProgressPan}>
-                      <View style={styles.progressBarContainer}>
+                    <PanGestureHandler onGestureEvent={handleProgressGesture}>
+                      <Animated.View style={styles.progressBarContainer}>
                         <View style={styles.progressBar}>
                           <View 
                             style={[
@@ -263,7 +271,7 @@ export default function HomeScreen() {
                             ]} 
                           />
                         </View>
-                      </View>
+                      </Animated.View>
                     </PanGestureHandler>
                     <View style={styles.timeContainer}>
                       <Text style={styles.timeText}>{formatTime(currentTime)}</Text>
@@ -294,8 +302,8 @@ export default function HomeScreen() {
 
                   <View style={styles.volumeContainer}>
                     <VolumeX size={20} color={Colors.light.neutral[600]} />
-                    <PanGestureHandler onGestureEvent={handleVolumePan}>
-                      <View style={styles.volumeSliderContainer}>
+                    <PanGestureHandler onGestureEvent={handleVolumeGesture}>
+                      <Animated.View style={styles.volumeSliderContainer}>
                         <View style={styles.volumeSlider}>
                           <View 
                             style={[
@@ -304,7 +312,7 @@ export default function HomeScreen() {
                             ]} 
                           />
                         </View>
-                      </View>
+                      </Animated.View>
                     </PanGestureHandler>
                     <Volume2 size={20} color={Colors.light.neutral[600]} />
                   </View>
@@ -521,6 +529,8 @@ const styles = StyleSheet.create({
   },
   progressBarContainer: {
     marginBottom: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
   },
   progressBar: {
     height: 4,
@@ -568,6 +578,8 @@ const styles = StyleSheet.create({
   volumeSliderContainer: {
     flex: 1,
     marginHorizontal: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
   },
   volumeSlider: {
     height: 4,

@@ -44,7 +44,7 @@ export default function CoursesScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>My Courses</Text>
+        <Text style={styles.title}>Courses</Text>
         <Text style={styles.subtitle}>{currentSemester.name}</Text>
       </View>
       
