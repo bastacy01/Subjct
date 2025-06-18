@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X, Volume2, VolumeX } from 'lucide-react-native';
-import { Audio } from 'expo-av';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { PanGestureHandler, GestureHandlerRootView, State } from 'react-native-gesture-handler';
+import { Play, Pause, Clock, Calendar } from 'lucide-react-native';
+import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 
 export default function HomeScreen() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentLecture, setCurrentLecture] = useState<any>(null);
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
-  const [selectedLecture, setSelectedLecture] = useState<any>(null);
-  const [showLectureDetail, setShowLectureDetail] = useState(false);
-  const [volume, setVolume] = useState(0.7);
-  const [currentTime, setCurrentTime] = useState(615); // 10:15 in seconds
-  const [totalTime, setTotalTime] = useState(3027); // 50:27 in seconds
+  const { 
+    currentLecture, 
+    isPlaying, 
+    handleLectureSelect, 
+    handlePlayButtonPress 
+  } = useAudioPlayer();
 
   const recentLectures = [
     {
@@ -76,97 +72,6 @@ export default function HomeScreen() {
     }
   ];
 
-  const togglePlayback = async (lecture: any) => {
-    if (currentLecture?.id === lecture.id) {
-      if (isPlaying) {
-        await sound?.pauseAsync();
-      } else {
-        await sound?.playAsync();
-      }
-      setIsPlaying(!isPlaying);
-    } else {
-      if (sound) {
-        await sound.unloadAsync();
-      }
-      setCurrentLecture(lecture);
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: 'https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav' },
-        { shouldPlay: true, volume }
-      );
-      setSound(newSound);
-      setIsPlaying(true);
-    }
-  };
-
-  const handleLectureSelect = (lecture: any) => {
-    // Only update the current lecture for the mini player
-    setCurrentLecture(lecture);
-    // Don't automatically open the modal
-  };
-
-  const handleMiniPlayerPress = () => {
-    if (currentLecture) {
-      setSelectedLecture(currentLecture);
-      setShowLectureDetail(true);
-    }
-  };
-
-  const handlePlayButtonPress = (lecture: any) => {
-    // When play button is pressed, both toggle playback and set as current
-    togglePlayback(lecture);
-    setCurrentLecture(lecture);
-  };
-
-  const handleVolumeChange = async (newVolume: number) => {
-    setVolume(newVolume);
-    if (sound) {
-      await sound.setVolumeAsync(newVolume);
-    }
-  };
-
-  const handleTimeChange = (newTime: number) => {
-    setCurrentTime(newTime);
-    // In a real app, you would seek to this position in the audio
-    if (sound) {
-      sound.setPositionAsync(newTime * 1000); // Convert to milliseconds
-    }
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleProgressGesture = (event: any) => {
-    const { state, x } = event.nativeEvent;
-    
-    if (state === State.ACTIVE || state === State.END) {
-      const progressWidth = 280; // Approximate width of progress bar
-      const progress = Math.max(0, Math.min(1, x / progressWidth));
-      const newTime = Math.floor(progress * totalTime);
-      handleTimeChange(newTime);
-    }
-  };
-
-  const handleVolumeGesture = (event: any) => {
-    const { state, x } = event.nativeEvent;
-    
-    if (state === State.ACTIVE || state === State.END) {
-      const volumeWidth = 200; // Approximate width of volume bar
-      const newVolume = Math.max(0, Math.min(1, x / volumeWidth));
-      handleVolumeChange(newVolume);
-    }
-  };
-
-  useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
-
   const renderLectureCard = (lecture: any) => (
     <TouchableOpacity
       key={lecture.id}
@@ -211,7 +116,7 @@ export default function HomeScreen() {
   );
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Home</Text>
       </View>
@@ -225,144 +130,7 @@ export default function HomeScreen() {
           {upcomingLectures.map(renderLectureCard)}
         </View>
       </ScrollView>
-
-      <Modal
-        visible={showLectureDetail}
-        transparent={true}
-        onRequestClose={() => setShowLectureDetail(false)}
-      >
-        <Animated.View 
-          style={styles.modalContainer}
-          entering={FadeIn.duration(200)}
-          exiting={FadeOut.duration(200)}
-        >
-          <View style={styles.lectureDetailSheet}>
-            <View style={styles.sheetHeader}>
-              <TouchableOpacity
-                onPress={() => setShowLectureDetail(false)}
-                style={styles.closeButton}
-              >
-                <X size={24} color={Colors.light.neutral[600]} />
-              </TouchableOpacity>
-            </View>
-
-            {selectedLecture && (
-              <View style={styles.sheetContent}>
-                <View style={styles.courseIdentifier}>
-                  <Text style={styles.courseCode}>{selectedLecture.course}</Text>
-                </View>
-                
-                <Text style={styles.detailTitle}>{selectedLecture.title}</Text>
-                <Text style={styles.detailInstructor}>{selectedLecture.instructor}</Text>
-                
-                <View style={styles.detailMetadata}>
-                  <View style={styles.detailMetadataItem}>
-                    <Clock size={16} color={Colors.light.neutral[600]} />
-                    <Text style={styles.detailMetadataText}>{selectedLecture.duration}</Text>
-                  </View>
-                  <View style={styles.detailMetadataItem}>
-                    <Calendar size={16} color={Colors.light.neutral[600]} />
-                    <Text style={styles.detailMetadataText}>
-                      {new Date(selectedLecture.date).toLocaleDateString()}
-                    </Text>
-                  </View>
-                </View>
-
-                <Text style={styles.descriptionTitle}>Description</Text>
-                <Text style={styles.description}>{selectedLecture.description}</Text>
-
-                <View style={styles.playerControlsContainer}>
-                  <View style={styles.progressContainer}>
-                    <PanGestureHandler onGestureEvent={handleProgressGesture}>
-                      <Animated.View style={styles.progressBarContainer}>
-                        <View style={styles.progressBar}>
-                          <View 
-                            style={[
-                              styles.progress, 
-                              { width: `${(currentTime / totalTime) * 100}%` }
-                            ]} 
-                          />
-                        </View>
-                      </Animated.View>
-                    </PanGestureHandler>
-                    <View style={styles.timeContainer}>
-                      <Text style={styles.timeText}>{formatTime(currentTime)}</Text>
-                      <Text style={styles.timeText}>-{formatTime(totalTime - currentTime)}</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.playerControls}>
-                    <TouchableOpacity style={styles.controlButton}>
-                      <SkipBack size={24} color={Colors.light.neutral[600]} />
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity
-                      onPress={() => togglePlayback(selectedLecture)}
-                      style={styles.mainPlayButton}
-                    >
-                      {isPlaying ? (
-                        <Pause size={32} color="white" />
-                      ) : (
-                        <Play size={32} color="white" />
-                      )}
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity style={styles.controlButton}>
-                      <SkipForward size={24} color={Colors.light.neutral[600]} />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.volumeContainer}>
-                    <VolumeX size={20} color={Colors.light.neutral[600]} />
-                    <PanGestureHandler onGestureEvent={handleVolumeGesture}>
-                      <Animated.View style={styles.volumeSliderContainer}>
-                        <View style={styles.volumeSlider}>
-                          <View 
-                            style={[
-                              styles.volumeProgress, 
-                              { width: `${volume * 100}%` }
-                            ]} 
-                          />
-                        </View>
-                      </Animated.View>
-                    </PanGestureHandler>
-                    <Volume2 size={20} color={Colors.light.neutral[600]} />
-                  </View>
-                </View>
-              </View>
-            )}
-          </View>
-        </Animated.View>
-      </Modal>
-
-      {currentLecture && !showLectureDetail && (
-        <TouchableOpacity 
-          style={styles.playerBar}
-          onPress={handleMiniPlayerPress}
-          activeOpacity={0.9}
-        >
-          <View style={styles.playerInfo}>
-            <Text numberOfLines={1} style={styles.playerTitle}>
-              {currentLecture.title}
-            </Text>
-            <Text style={styles.playerCourse}>{currentLecture.course}</Text>
-          </View>
-          
-          <TouchableOpacity
-            onPress={(e) => {
-              e.stopPropagation();
-              togglePlayback(currentLecture);
-            }}
-          >
-            {isPlaying ? (
-              <Pause size={24} color="white" />
-            ) : (
-              <Play size={24} color="white" />
-            )}
-          </TouchableOpacity>
-        </TouchableOpacity>
-      )}
-    </GestureHandlerRootView>
+    </View>
   );
 }
 
@@ -370,6 +138,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.neutral[50],
+    paddingBottom: 56, // Add padding for mini player
   },
   header: {
     backgroundColor: Colors.light.primary[600],
@@ -450,185 +219,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  lectureDetailSheet: {
-    backgroundColor: 'white',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    height: '85%',
-  },
-  sheetHeader: {
-    alignItems: 'flex-end',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.light.neutral[200],
-  },
-  closeButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Colors.light.neutral[100],
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sheetContent: {
-    padding: 24,
-    flex: 1,
-  },
-  courseIdentifier: {
-    backgroundColor: Colors.light.primary[100],
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    alignSelf: 'flex-start',
-    marginBottom: 16,
-  },
-  courseCode: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: Colors.light.primary[700],
-  },
-  detailTitle: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 24,
-    color: Colors.light.neutral[900],
-    marginBottom: 8,
-  },
-  detailInstructor: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: Colors.light.neutral[700],
-    marginBottom: 16,
-  },
-  detailMetadata: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 24,
-  },
-  detailMetadataItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  detailMetadataText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: Colors.light.neutral[600],
-  },
-  descriptionTitle: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 18,
-    color: Colors.light.neutral[900],
-    marginBottom: 8,
-  },
-  description: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: Colors.light.neutral[700],
-    lineHeight: 24,
-    marginBottom: 32,
-  },
-  playerControlsContainer: {
-    marginTop: 'auto',
-    paddingBottom: 40,
-  },
-  progressContainer: {
-    marginBottom: 40,
-  },
-  progressBarContainer: {
-    marginBottom: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 4,
-  },
-  progressBar: {
-    height: 4,
-    backgroundColor: Colors.light.neutral[200],
-    borderRadius: 2,
-    position: 'relative',
-  },
-  progress: {
-    height: '100%',
-    backgroundColor: Colors.light.primary[600],
-    borderRadius: 2,
-  },
-  timeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  timeText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    color: Colors.light.neutral[600],
-  },
-  playerControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 24,
-    marginBottom: 40,
-  },
-  controlButton: {
-    padding: 8,
-  },
-  mainPlayButton: {
-    backgroundColor: Colors.light.primary[600],
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  volumeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 4,
-  },
-  volumeSliderContainer: {
-    flex: 1,
-    marginHorizontal: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 4,
-  },
-  volumeSlider: {
-    height: 4,
-    backgroundColor: Colors.light.neutral[200],
-    borderRadius: 2,
-    position: 'relative',
-  },
-  volumeProgress: {
-    height: '100%',
-    backgroundColor: Colors.light.primary[600],
-    borderRadius: 2,
-  },
-  playerBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 56,
-    backgroundColor: Colors.light.primary[600],
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  playerInfo: {
-    flex: 1,
-    marginRight: 16,
-  },
-  playerTitle: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 15,
-    color: 'white',
-    marginBottom: 2,
-  },
-  playerCourse: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 13,
-    color: Colors.light.primary[200],
-  }
 });

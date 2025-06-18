@@ -211,7 +211,7 @@ export default function CalendarScreen() {
         {viewMode === 'week' ? renderWeekView() : renderMonthView()}
       </View>
 
-      <ScrollView style={styles.scheduleContainer}>
+      <ScrollView style={styles.scheduleContainer} contentContainerStyle={{ paddingBottom: 56 }}>
         <View style={styles.scheduleHeader}>
           <CalendarIcon size={20} color={Colors.light.primary[600]} />
           <Text style={styles.scheduleHeaderText}>

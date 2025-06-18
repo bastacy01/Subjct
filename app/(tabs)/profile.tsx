@@ -105,7 +105,7 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
       
-      <ScrollView style={styles.menuSection} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.menuSection} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 56 }}>
         <View style={styles.menuContent}>
           {menuItems.map((item) => (
             <TouchableOpacity

@@ -52,7 +52,7 @@ export default function CoursesScreen() {
         data={courses}
         keyExtractor={(item) => item.id}
         renderItem={renderCourseItem}
-        contentContainerStyle={styles.coursesList}
+        contentContainerStyle={[styles.coursesList, { paddingBottom: 56 }]} // Add padding for mini player
         showsVerticalScrollIndicator={false}
       />
     </View>

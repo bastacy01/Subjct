@@ -2,11 +2,20 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import Colors from '@/constants/Colors';
-import { Play, Clock, Calendar } from 'lucide-react-native';
+import { Play, Pause, Clock, Calendar } from 'lucide-react-native';
 import { semesters } from '@/constants/MockData';
+import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 
 export default function CourseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { 
+    currentLecture, 
+    isPlaying, 
+    handleLectureSelect, 
+    handlePlayButtonPress,
+    setSelectedLecture,
+    setShowLectureDetail
+  } = useAudioPlayer();
   
   // Find the course from the mock data
   const course = semesters[0].courses.find(c => c.id === id);
@@ -69,9 +78,9 @@ export default function CourseDetailScreen() {
   ];
 
   const handleLecturePress = (lecture: any) => {
-    // This would open the modal player sheet
-    // For now, we'll just log it
-    console.log('Opening lecture:', lecture);
+    // Set the lecture as selected and open the modal
+    setSelectedLecture(lecture);
+    setShowLectureDetail(true);
   };
 
   return (
@@ -90,13 +99,16 @@ export default function CourseDetailScreen() {
         <ScrollView 
           style={styles.lecturesList}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.lecturesContent}
+          contentContainerStyle={[styles.lecturesContent, { paddingBottom: 56 }]} // Add padding for mini player
         >
           {lectures.map((lecture) => (
             <TouchableOpacity 
               key={lecture.id}
-              style={styles.lectureCard}
-              onPress={() => handleLecturePress(lecture)}
+              style={[
+                styles.lectureCard,
+                currentLecture?.id === lecture.id && styles.activeLectureCard
+              ]}
+              onPress={() => handleLectureSelect(lecture)}
             >
               <View style={styles.lectureInfo}>
                 <Text style={styles.lectureTitle}>{lecture.title}</Text>
@@ -116,9 +128,19 @@ export default function CourseDetailScreen() {
                 </View>
               </View>
               
-              <View style={styles.playButtonContainer}>
-                <Play size={24} color={Colors.light.primary[600]} />
-              </View>
+              <TouchableOpacity 
+                style={styles.playButtonContainer}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handlePlayButtonPress(lecture);
+                }}
+              >
+                {currentLecture?.id === lecture.id && isPlaying ? (
+                  <Pause size={24} color={Colors.light.primary[600]} />
+                ) : (
+                  <Play size={24} color={Colors.light.primary[600]} />
+                )}
+              </TouchableOpacity>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -193,6 +215,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
+  },
+  activeLectureCard: {
+    borderColor: Colors.light.primary[400],
+    borderWidth: 1,
+    backgroundColor: Colors.light.primary[50],
   },
   lectureInfo: {
     flex: 1,
