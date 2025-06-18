@@ -65,8 +65,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   const [highlightedLectureId, setHighlightedLectureId] = useState<string | null>(null);
 
   const togglePlayback = async (lecture: Lecture) => {
-    if (currentLecture?.id === lecture.id && currentLecture?.course === lecture.course) {
-      // Same lecture - toggle play/pause
+    if (currentLecture?.id === lecture.id) {
       if (isPlaying) {
         await sound?.pauseAsync();
       } else {
@@ -74,7 +73,6 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
       }
       setIsPlaying(!isPlaying);
     } else {
-      // Different lecture - stop current and start new
       if (sound) {
         await sound.unloadAsync();
       }
@@ -90,9 +88,9 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   };
 
   const handleLectureSelect = (lecture: Lecture) => {
-    // Only set as selected for modal, don't change current playing lecture
-    setSelectedLecture(lecture);
-    setShowLectureDetail(true);
+    // Update both current lecture and highlighted lecture
+    setCurrentLecture(lecture);
+    setHighlightedLectureId(lecture.id);
   };
 
   const handleMiniPlayerPress = () => {
@@ -103,8 +101,9 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   };
 
   const handlePlayButtonPress = (lecture: Lecture) => {
-    // When play button is pressed, toggle playback and update current lecture
+    // When play button is pressed, both toggle playback and set as current
     togglePlayback(lecture);
+    // Note: togglePlayback already sets currentLecture and highlightedLectureId
   };
 
   const handleVolumeChange = async (newVolume: number) => {
@@ -127,15 +126,6 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
-
-  // Update highlighted lecture ID whenever current lecture changes
-  useEffect(() => {
-    if (currentLecture) {
-      setHighlightedLectureId(currentLecture.id);
-    } else {
-      setHighlightedLectureId(null);
-    }
-  }, [currentLecture]);
 
   useEffect(() => {
     return sound

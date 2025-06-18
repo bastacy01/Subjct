@@ -32,7 +32,7 @@ export default function CourseDetailScreen() {
   // Mock lectures data
   const lectures = [
     {
-      id: `${course.code}-1`,
+      id: '1',
       title: 'Introduction to the Course',
       duration: '50:00',
       date: '2024-03-15',
@@ -41,7 +41,7 @@ export default function CourseDetailScreen() {
       course: course.code
     },
     {
-      id: `${course.code}-2`,
+      id: '2',
       title: 'Fundamental Concepts',
       duration: '45:30',
       date: '2024-03-17',
@@ -50,7 +50,7 @@ export default function CourseDetailScreen() {
       course: course.code
     },
     {
-      id: `${course.code}-3`,
+      id: '3',
       title: 'Advanced Topics Part 1',
       duration: '55:15',
       date: '2024-03-20',
@@ -59,7 +59,7 @@ export default function CourseDetailScreen() {
       course: course.code
     },
     {
-      id: `${course.code}-4`,
+      id: '4',
       title: 'Problem Solving Session',
       duration: '48:20',
       date: '2024-03-22',
@@ -68,7 +68,7 @@ export default function CourseDetailScreen() {
       course: course.code
     },
     {
-      id: `${course.code}-5`,
+      id: '5',
       title: 'Case Studies',
       duration: '52:45',
       date: '2024-03-24',
@@ -82,19 +82,6 @@ export default function CourseDetailScreen() {
     // Set the lecture as selected and open the modal
     setSelectedLecture(lecture);
     setShowLectureDetail(true);
-  };
-
-  // Check if a lecture is currently playing and highlighted
-  const isLectureHighlighted = (lecture: any) => {
-    return currentLecture?.id === lecture.id && 
-           currentLecture?.course === lecture.course &&
-           highlightedLectureId === lecture.id;
-  };
-
-  // Check if a lecture is the current playing lecture
-  const isCurrentPlayingLecture = (lecture: any) => {
-    return currentLecture?.id === lecture.id && 
-           currentLecture?.course === lecture.course;
   };
 
   return (
@@ -120,7 +107,7 @@ export default function CourseDetailScreen() {
               key={lecture.id}
               style={[
                 styles.lectureCard,
-                isLectureHighlighted(lecture) && styles.activeLectureCard
+                highlightedLectureId === lecture.id && styles.activeLectureCard
               ]}
               onPress={() => handleLectureSelect(lecture)}
             >
@@ -149,7 +136,7 @@ export default function CourseDetailScreen() {
                   handlePlayButtonPress(lecture);
                 }}
               >
-                {isCurrentPlayingLecture(lecture) && isPlaying ? (
+                {currentLecture?.id === lecture.id && isPlaying ? (
                   <Pause size={24} color={Colors.light.primary[600]} />
                 ) : (
                   <Play size={24} color={Colors.light.primary[600]} />
