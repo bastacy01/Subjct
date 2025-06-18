@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.neutral[50],
-    paddingBottom: 56, // Add padding for mini player
   },
   header: {
     backgroundColor: Colors.light.primary[600],
