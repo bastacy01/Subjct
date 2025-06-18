@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image } from 'react-native';
 import Colors from '@/constants/Colors';
 import { Play, Pause, Clock, Calendar } from 'lucide-react-native';
 import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
@@ -120,6 +120,19 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Home</Text>
+        <TouchableOpacity 
+          style={styles.boltLogoContainer}
+          onPress={() => {
+            // Optional: Add navigation to about/credits page
+            console.log('Built with Bolt!');
+          }}
+        >
+          <Image 
+            source={require('@/assets/images/white_circle_360x360.png')}
+            style={styles.boltLogo}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -146,6 +159,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: Platform.OS === 'ios' ? 60 : 40,
     paddingBottom: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   scrollContent: {
     flex: 1,
@@ -154,6 +170,23 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     fontSize: 28,
     color: 'white',
+  },
+  boltLogoContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  boltLogo: {
+    width: 32,
+    height: 32,
   },
   lecturesContainer: {
     padding: 16,
