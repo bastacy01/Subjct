@@ -22,6 +22,7 @@ export default function CoursesLayout() {
           headerLeftContainerStyle: {
             paddingLeft: 8,
           },
+          headerBackTitleVisible: false,
         }}
       />
     </Stack>
