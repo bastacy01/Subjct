@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Platform, Image, Linking } from 'react-native';
+import { View, Text, StyleSheet, Platform, Linking } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { universities, University } from '@/constants/Universities';
 import Button from '@/components/common/Button';
 import Colors from '@/constants/Colors';
 import ProgressBar from '@/components/common/ProgressBar';
-import AnimatedLogo from '@/components/onboarding/AnimatedLogo';
 import { WebView } from 'react-native-webview';
 import { ExternalLink } from 'lucide-react-native';
 
@@ -122,11 +121,6 @@ export default function LmsAuthScreen() {
           </View>
           
           <View style={styles.contentContainer}>
-            <AnimatedLogo 
-              source={{ uri: school.logoUrl }}
-              size={120}
-            />
-            
             <View style={styles.schoolInfoContainer}>
               <Text style={styles.schoolName}>{school.name}</Text>
               <View style={styles.lmsInfoContainer}>
@@ -224,7 +218,6 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   schoolInfoContainer: {
-    marginTop: 24,
     alignItems: 'center',
   },
   schoolName: {
