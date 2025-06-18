@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, Linking } from 'react-native';
 import Colors from '@/constants/Colors';
 import { Play, Pause, Clock, Calendar } from 'lucide-react-native';
 import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
@@ -73,6 +73,19 @@ export default function HomeScreen() {
     }
   ];
 
+  const handleBoltLogoPress = async () => {
+    try {
+      const supported = await Linking.canOpenURL('https://bolt.new/');
+      if (supported) {
+        await Linking.openURL('https://bolt.new/');
+      } else {
+        console.log("Don't know how to open URI: https://bolt.new/");
+      }
+    } catch (error) {
+      console.error('An error occurred', error);
+    }
+  };
+
   const renderLectureCard = (lecture: any) => (
     <TouchableOpacity
       key={lecture.id}
@@ -122,10 +135,8 @@ export default function HomeScreen() {
         <Text style={styles.title}>Home</Text>
         <TouchableOpacity 
           style={styles.boltLogoContainer}
-          onPress={() => {
-            // Optional: Add navigation to about/credits page
-            console.log('Built with Bolt!');
-          }}
+          onPress={handleBoltLogoPress}
+          activeOpacity={0.7}
         >
           <Image 
             source={require('@/assets/images/white_circle_360x360.png')}
@@ -172,21 +183,21 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   boltLogoContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 3,
   },
   boltLogo: {
-    width: 32,
-    height: 32,
+    width: 38,
+    height: 38,
   },
   lecturesContainer: {
     padding: 16,
