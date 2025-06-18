@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Platform, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from 'react-native';
 import Colors from '@/constants/Colors';
 import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X } from 'lucide-react-native';
 import { Audio } from 'expo-av';
@@ -153,14 +153,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.welcomeText}>Welcome back!</Text>
-          <Text style={styles.title}>Home</Text>
-        </View>
-        <Image
-          source={{ uri: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' }}
-          style={styles.profileImage}
-        />
+        <Text style={styles.title}>Home</Text>
       </View>
 
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -293,9 +286,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.neutral[50],
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: Colors.light.primary[600],
     paddingHorizontal: 24,
     paddingTop: Platform.OS === 'ios' ? 60 : 40,
@@ -304,26 +294,10 @@ const styles = StyleSheet.create({
   scrollContent: {
     flex: 1,
   },
-  titleContainer: {
-    flex: 1,
-  },
-  welcomeText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: Colors.light.primary[200],
-    marginBottom: 4,
-  },
   title: {
     fontFamily: 'Inter-Bold',
     fontSize: 28,
     color: 'white',
-  },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'white',
   },
   lecturesContainer: {
     padding: 16,
@@ -522,7 +496,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 64,
+    height: 56,
     backgroundColor: Colors.light.primary[600],
     flexDirection: 'row',
     alignItems: 'center',

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import Animated, { 
   useSharedValue, 
@@ -31,14 +31,20 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   // Animation value
   const widthProgress = useSharedValue(0);
   
+  // Track if this is the first render
+  const isFirstRender = useRef(true);
+  
   // Update animation when progress changes
   useEffect(() => {
-    if (animated) {
+    if (animated && isFirstRender.current) {
+      // Only animate on first render
       widthProgress.value = withTiming(clampedProgress, {
         duration,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       });
+      isFirstRender.current = false;
     } else {
+      // Set immediately without animation for subsequent updates
       widthProgress.value = clampedProgress;
     }
   }, [clampedProgress, animated, duration]);
