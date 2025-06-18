@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X, Volume2 } from 'lucide-react-native';
+import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X, Volume, VolumeX } from 'lucide-react-native';
 import { Audio } from 'expo-av';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
@@ -230,8 +230,29 @@ export default function HomeScreen() {
                     </View>
                   </View>
 
+                  <View style={styles.playerControls}>
+                    <TouchableOpacity style={styles.controlButton}>
+                      <SkipBack size={24} color={Colors.light.neutral[600]} />
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity
+                      onPress={() => togglePlayback(selectedLecture)}
+                      style={styles.mainPlayButton}
+                    >
+                      {isPlaying ? (
+                        <Pause size={32} color="white" />
+                      ) : (
+                        <Play size={32} color="white" />
+                      )}
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.controlButton}>
+                      <SkipForward size={24} color={Colors.light.neutral[600]} />
+                    </TouchableOpacity>
+                  </View>
+
                   <View style={styles.volumeContainer}>
-                    <Volume2 size={20} color={Colors.light.neutral[600]} />
+                    <VolumeX size={20} color={Colors.light.neutral[600]} />
                     <View style={styles.volumeSliderContainer}>
                       <View style={styles.volumeSlider}>
                         <View 
@@ -253,28 +274,7 @@ export default function HomeScreen() {
                         />
                       </View>
                     </View>
-                    <Text style={styles.volumeText}>{Math.round(volume * 100)}%</Text>
-                  </View>
-
-                  <View style={styles.playerControls}>
-                    <TouchableOpacity style={styles.controlButton}>
-                      <SkipBack size={24} color={Colors.light.neutral[600]} />
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity
-                      onPress={() => togglePlayback(selectedLecture)}
-                      style={styles.mainPlayButton}
-                    >
-                      {isPlaying ? (
-                        <Pause size={32} color="white" />
-                      ) : (
-                        <Play size={32} color="white" />
-                      )}
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity style={styles.controlButton}>
-                      <SkipForward size={24} color={Colors.light.neutral[600]} />
-                    </TouchableOpacity>
+                    <Volume size={20} color={Colors.light.neutral[600]} />
                   </View>
                 </View>
               </View>
@@ -508,10 +508,27 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.light.neutral[600],
   },
+  playerControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 24,
+    marginBottom: 24,
+  },
+  controlButton: {
+    padding: 8,
+  },
+  mainPlayButton: {
+    backgroundColor: Colors.light.primary[600],
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   volumeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
     paddingHorizontal: 4,
   },
   volumeSliderContainer: {
@@ -537,30 +554,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.primary[600],
     borderRadius: 8,
     marginLeft: -8,
-  },
-  volumeText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    color: Colors.light.neutral[600],
-    minWidth: 32,
-    textAlign: 'right',
-  },
-  playerControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 24,
-  },
-  controlButton: {
-    padding: 8,
-  },
-  mainPlayButton: {
-    backgroundColor: Colors.light.primary[600],
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   playerBar: {
     position: 'absolute',
