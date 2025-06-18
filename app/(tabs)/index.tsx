@@ -99,9 +99,9 @@ export default function HomeScreen() {
   };
 
   const handleLectureSelect = (lecture: any) => {
+    // Only update the current lecture for the mini player
     setCurrentLecture(lecture);
-    setSelectedLecture(lecture);
-    setShowLectureDetail(true);
+    // Don't automatically open the modal
   };
 
   const handleMiniPlayerPress = () => {
@@ -109,6 +109,12 @@ export default function HomeScreen() {
       setSelectedLecture(currentLecture);
       setShowLectureDetail(true);
     }
+  };
+
+  const handlePlayButtonPress = (lecture: any) => {
+    // When play button is pressed, both toggle playback and set as current
+    togglePlayback(lecture);
+    setCurrentLecture(lecture);
   };
 
   const handleVolumeChange = async (newVolume: number) => {
@@ -188,13 +194,19 @@ export default function HomeScreen() {
         </View>
       </View>
       
-      <View style={styles.playButtonContainer}>
+      <TouchableOpacity 
+        style={styles.playButtonContainer}
+        onPress={(e) => {
+          e.stopPropagation();
+          handlePlayButtonPress(lecture);
+        }}
+      >
         {currentLecture?.id === lecture.id && isPlaying ? (
           <Pause size={24} color={Colors.light.primary[600]} />
         ) : (
           <Play size={24} color={Colors.light.primary[600]} />
         )}
-      </View>
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 
