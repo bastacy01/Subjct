@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X, Volume, VolumeX } from 'lucide-react-native';
+import { Play, Pause, SkipForward, SkipBack, Clock, Calendar, X, Volume2, VolumeX } from 'lucide-react-native';
 import { Audio } from 'expo-av';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -262,12 +262,6 @@ export default function HomeScreen() {
                               { width: `${(currentTime / totalTime) * 100}%` }
                             ]} 
                           />
-                          <View
-                            style={[
-                              styles.progressThumb,
-                              { left: `${(currentTime / totalTime) * 100}%` }
-                            ]}
-                          />
                         </View>
                       </View>
                     </PanGestureHandler>
@@ -309,16 +303,10 @@ export default function HomeScreen() {
                               { width: `${volume * 100}%` }
                             ]} 
                           />
-                          <View
-                            style={[
-                              styles.volumeThumb,
-                              { left: `${volume * 100}%` }
-                            ]}
-                          />
                         </View>
                       </View>
                     </PanGestureHandler>
-                    <Volume size={20} color={Colors.light.neutral[600]} />
+                    <Volume2 size={20} color={Colors.light.neutral[600]} />
                   </View>
                 </View>
               </View>
@@ -529,7 +517,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   progressContainer: {
-    marginBottom: 32,
+    marginBottom: 40,
   },
   progressBarContainer: {
     marginBottom: 8,
@@ -545,15 +533,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.primary[600],
     borderRadius: 2,
   },
-  progressThumb: {
-    position: 'absolute',
-    top: -6,
-    width: 16,
-    height: 16,
-    backgroundColor: Colors.light.primary[600],
-    borderRadius: 8,
-    marginLeft: -8,
-  },
   timeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -568,7 +547,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 24,
-    marginBottom: 32,
+    marginBottom: 40,
   },
   controlButton: {
     padding: 8,
@@ -600,15 +579,6 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: Colors.light.primary[600],
     borderRadius: 2,
-  },
-  volumeThumb: {
-    position: 'absolute',
-    top: -6,
-    width: 16,
-    height: 16,
-    backgroundColor: Colors.light.primary[600],
-    borderRadius: 8,
-    marginLeft: -8,
   },
   playerBar: {
     position: 'absolute',
