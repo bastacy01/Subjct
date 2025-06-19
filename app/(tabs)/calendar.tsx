@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   dayItem: {
-    width: 64,
+    width: 56,
     height: 64,
     alignItems: 'center',
     justifyContent: 'center',
@@ -375,10 +375,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 6,
+    gap: 4,
   },
   monthDayItem: {
-    width: '14.28%',
-    height: 40,
+    width: '13.5%',
+    height: 36,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
@@ -405,8 +406,8 @@ const styles = StyleSheet.create({
     color: Colors.light.primary[700],
   },
   emptyDay: {
-    width: '14.28%',
-    height: 40,
+    width: '13.5%',
+    height: 36,
     marginBottom: 8,
   },
   scheduleContainer: {
