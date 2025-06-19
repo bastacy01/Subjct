@@ -375,10 +375,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 6,
-    gap: 4,
   },
   monthDayItem: {
-    width: '13.5%',
+    width: '14.28%',
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
@@ -406,7 +405,7 @@ const styles = StyleSheet.create({
     color: Colors.light.primary[700],
   },
   emptyDay: {
-    width: '13.5%',
+    width: '14.28%',
     height: 36,
     marginBottom: 8,
   },
