@@ -1,19 +1,35 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Dimensions } from 'react-native';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import Animated, { 
+  useSharedValue, 
+  useAnimatedStyle, 
+  withSpring, 
+  withTiming,
+  runOnJS,
+  useAnimatedGestureHandler
+} from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
 import { Clock, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react-native';
+
+const { height: screenHeight } = Dimensions.get('window');
 
 export default function CalendarScreen() {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date().getDate());
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Animation values
+  const calendarHeight = useSharedValue(viewMode === 'week' ? 120 : 300);
+  const translateY = useSharedValue(0);
 
   // Generate dates for current view
   const getDates = () => {
     const dates = [];
     const startDate = new Date(selectedDate);
     
-    if (viewMode === 'week') {
+    if (viewMode === 'week' || isCollapsed) {
       // Start from Sunday of current week
       startDate.setDate(selectedDate.getDate() - selectedDate.getDay());
       for (let i = 0; i < 7; i++) {
@@ -45,7 +61,7 @@ export default function CalendarScreen() {
 
   const navigateDate = (direction: 'prev' | 'next') => {
     const newDate = new Date(selectedDate);
-    if (viewMode === 'week') {
+    if (viewMode === 'week' || isCollapsed) {
       newDate.setDate(selectedDate.getDate() + (direction === 'next' ? 7 : -7));
     } else {
       newDate.setMonth(selectedDate.getMonth() + (direction === 'next' ? 1 : -1));
@@ -88,6 +104,57 @@ export default function CalendarScreen() {
     }
   };
 
+  const toggleViewMode = (mode: 'week' | 'month') => {
+    if (mode === 'week') {
+      setIsCollapsed(false);
+      calendarHeight.value = withSpring(120);
+    } else {
+      setIsCollapsed(false);
+      calendarHeight.value = withSpring(300);
+    }
+    setViewMode(mode);
+  };
+
+  // Gesture handler for drag to collapse/expand
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart: (_, context) => {
+      context.startY = translateY.value;
+    },
+    onActive: (event, context) => {
+      if (viewMode === 'month') {
+        translateY.value = context.startY + event.translationY;
+      }
+    },
+    onEnd: (event) => {
+      if (viewMode === 'month') {
+        const shouldCollapse = event.translationY > 50 || event.velocityY > 500;
+        const shouldExpand = event.translationY < -50 || event.velocityY < -500;
+        
+        if (shouldCollapse && !isCollapsed) {
+          // Collapse to week view
+          translateY.value = withSpring(0);
+          calendarHeight.value = withSpring(120);
+          runOnJS(setIsCollapsed)(true);
+        } else if (shouldExpand && isCollapsed) {
+          // Expand to month view
+          translateY.value = withSpring(0);
+          calendarHeight.value = withSpring(300);
+          runOnJS(setIsCollapsed)(false);
+        } else {
+          // Snap back
+          translateY.value = withSpring(0);
+        }
+      }
+    },
+  });
+
+  const animatedCalendarStyle = useAnimatedStyle(() => {
+    return {
+      height: calendarHeight.value,
+      transform: [{ translateY: translateY.value }],
+    };
+  });
+
   const renderCalendarHeader = () => (
     <View style={styles.calendarHeader}>
       <TouchableOpacity onPress={() => navigateDate('prev')} style={styles.navigationButton}>
@@ -98,7 +165,7 @@ export default function CalendarScreen() {
         <Text style={styles.headerMonth}>
           {selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
         </Text>
-        {viewMode === 'week' && (
+        {(viewMode === 'week' || isCollapsed) && (
           <Text style={styles.headerWeek}>
             Week {Math.ceil(selectedDate.getDate() / 7)}
           </Text>
@@ -186,19 +253,19 @@ export default function CalendarScreen() {
         <Text style={styles.title}>Calendar</Text>
         <View style={styles.viewToggle}>
           <TouchableOpacity
-            style={[styles.toggleButton, viewMode === 'week' && styles.activeToggle]}
-            onPress={() => setViewMode('week')}
+            style={[styles.toggleButton, (viewMode === 'week' || isCollapsed) && styles.activeToggle]}
+            onPress={() => toggleViewMode('week')}
           >
-            <Text style={[styles.toggleText, viewMode === 'week' && styles.activeToggleText]}>
+            <Text style={[styles.toggleText, (viewMode === 'week' || isCollapsed) && styles.activeToggleText]}>
               Week
             </Text>
           </TouchableOpacity>
           
           <TouchableOpacity
-            style={[styles.toggleButton, viewMode === 'month' && styles.activeToggle]}
-            onPress={() => setViewMode('month')}
+            style={[styles.toggleButton, viewMode === 'month' && !isCollapsed && styles.activeToggle]}
+            onPress={() => toggleViewMode('month')}
           >
-            <Text style={[styles.toggleText, viewMode === 'month' && styles.activeToggleText]}>
+            <Text style={[styles.toggleText, viewMode === 'month' && !isCollapsed && styles.activeToggleText]}>
               Month
             </Text>
           </TouchableOpacity>
@@ -207,9 +274,18 @@ export default function CalendarScreen() {
 
       {renderCalendarHeader()}
       
-      <View style={styles.calendarContainer}>
-        {viewMode === 'week' ? renderWeekView() : renderMonthView()}
-      </View>
+      <PanGestureHandler onGestureEvent={gestureHandler}>
+        <Animated.View style={[styles.calendarContainer, animatedCalendarStyle]}>
+          {(viewMode === 'week' || isCollapsed) ? renderWeekView() : renderMonthView()}
+          
+          {/* Drag indicator for month view */}
+          {viewMode === 'month' && !isCollapsed && (
+            <View style={styles.dragIndicator}>
+              <View style={styles.dragHandle} />
+            </View>
+          )}
+        </Animated.View>
+      </PanGestureHandler>
 
       <ScrollView style={styles.scheduleContainer} contentContainerStyle={{ paddingBottom: 56 }}>
         <View style={styles.scheduleHeader}>
@@ -321,6 +397,7 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     backgroundColor: 'white',
+    overflow: 'hidden',
   },
   weekContainer: {
     paddingVertical: 12,
@@ -386,12 +463,14 @@ const styles = StyleSheet.create({
   selectedMonthDay: {
     backgroundColor: Colors.light.primary[600],
     borderRadius: 8,
+    marginHorizontal: 2, // Add small margin to prevent touching
   },
   todayMonthDay: {
     backgroundColor: Colors.light.primary[50],
     borderWidth: 1,
     borderColor: Colors.light.primary[400],
     borderRadius: 8,
+    marginHorizontal: 2, // Add small margin to prevent touching
   },
   monthDayText: {
     fontFamily: 'Inter-Medium',
@@ -408,6 +487,19 @@ const styles = StyleSheet.create({
     width: '14.28%',
     height: 36,
     marginBottom: 8,
+  },
+  dragIndicator: {
+    position: 'absolute',
+    bottom: 8,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  dragHandle: {
+    width: 40,
+    height: 4,
+    backgroundColor: Colors.light.neutral[300],
+    borderRadius: 2,
   },
   scheduleContainer: {
     flex: 1,
