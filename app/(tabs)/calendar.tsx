@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
   withSpring, 
-  withTiming,
   runOnJS,
   useAnimatedGestureHandler
 } from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
 import { Clock, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react-native';
-
-const { height: screenHeight } = Dimensions.get('window');
 
 export default function CalendarScreen() {
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
@@ -21,15 +18,14 @@ export default function CalendarScreen() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Animation values
-  const calendarHeight = useSharedValue(viewMode === 'week' ? 120 : 300);
-  const translateY = useSharedValue(0);
+  const calendarHeight = useSharedValue(300);
 
   // Generate dates for current view
   const getDates = () => {
     const dates = [];
     const startDate = new Date(selectedDate);
     
-    if (viewMode === 'week' || isCollapsed) {
+    if (viewMode === 'week') {
       // Start from Sunday of current week
       startDate.setDate(selectedDate.getDate() - selectedDate.getDay());
       for (let i = 0; i < 7; i++) {
@@ -38,21 +34,32 @@ export default function CalendarScreen() {
         dates.push(date);
       }
     } else {
-      // Start from first day of month
-      startDate.setDate(1);
-      const monthDays = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0).getDate();
-      
-      // Add empty days for padding
-      const firstDayOfMonth = startDate.getDay();
-      for (let i = 0; i < firstDayOfMonth; i++) {
-        dates.push(null);
-      }
-      
-      // Add month days
-      for (let i = 1; i <= monthDays; i++) {
-        const date = new Date(startDate);
-        date.setDate(i);
-        dates.push(date);
+      // For month view or collapsed state
+      if (isCollapsed) {
+        // Show only current week when collapsed
+        startDate.setDate(selectedDate.getDate() - selectedDate.getDay());
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(startDate);
+          date.setDate(startDate.getDate() + i);
+          dates.push(date);
+        }
+      } else {
+        // Start from first day of month
+        startDate.setDate(1);
+        const monthDays = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0).getDate();
+        
+        // Add empty days for padding
+        const firstDayOfMonth = startDate.getDay();
+        for (let i = 0; i < firstDayOfMonth; i++) {
+          dates.push(null);
+        }
+        
+        // Add month days
+        for (let i = 1; i <= monthDays; i++) {
+          const date = new Date(startDate);
+          date.setDate(i);
+          dates.push(date);
+        }
       }
     }
     
@@ -69,80 +76,47 @@ export default function CalendarScreen() {
     setSelectedDate(newDate);
   };
 
-  // Mock schedule data
-  const schedule = [
-    {
-      id: '1',
-      courseCode: 'CS 101',
-      courseName: 'Introduction to Computer Science',
-      startTime: '10:00 AM',
-      endTime: '10:50 AM',
-      type: 'lecture',
-    },
-    {
-      id: '2',
-      courseCode: 'MATH 241',
-      courseName: 'Calculus III',
-      startTime: '11:00 AM',
-      endTime: '12:15 PM',
-      type: 'lecture',
-    },
-    {
-      id: '3',
-      courseCode: 'PHYS 211',
-      courseName: 'University Physics I',
-      startTime: '1:00 PM',
-      endTime: '1:50 PM',
-      type: 'lecture',
-    },
-  ];
-
-  const handleDateSelect = (date: Date | null) => {
-    if (date) {
-      setSelectedDate(date);
-      setSelectedDay(date.getDate());
-    }
-  };
-
   const toggleViewMode = (mode: 'week' | 'month') => {
+    setViewMode(mode);
+    setIsCollapsed(false);
     if (mode === 'week') {
-      setIsCollapsed(false);
       calendarHeight.value = withSpring(120);
     } else {
-      setIsCollapsed(false);
       calendarHeight.value = withSpring(300);
     }
-    setViewMode(mode);
   };
 
   // Gesture handler for drag to collapse/expand
   const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_, context) => {
-      context.startY = translateY.value;
+    onStart: () => {
+      // No initial setup needed
     },
-    onActive: (event, context) => {
+    onActive: (event) => {
+      // Only allow gesture in month view
       if (viewMode === 'month') {
-        translateY.value = context.startY + event.translationY;
+        // Prevent negative translation (dragging down)
+        const newHeight = Math.max(120, 300 + event.translationY);
+        calendarHeight.value = newHeight;
       }
     },
     onEnd: (event) => {
       if (viewMode === 'month') {
-        const shouldCollapse = event.translationY > 50 || event.velocityY > 500;
-        const shouldExpand = event.translationY < -50 || event.velocityY < -500;
+        const shouldCollapse = event.translationY > 80 || event.velocityY > 800;
         
         if (shouldCollapse && !isCollapsed) {
-          // Collapse to week view
-          translateY.value = withSpring(0);
+          // Collapse to show only current week
           calendarHeight.value = withSpring(120);
           runOnJS(setIsCollapsed)(true);
-        } else if (shouldExpand && isCollapsed) {
-          // Expand to month view
-          translateY.value = withSpring(0);
+        } else if (!shouldCollapse && isCollapsed) {
+          // Expand back to full month
           calendarHeight.value = withSpring(300);
           runOnJS(setIsCollapsed)(false);
+        } else if (!isCollapsed) {
+          // Snap back to full month
+          calendarHeight.value = withSpring(300);
         } else {
-          // Snap back
-          translateY.value = withSpring(0);
+          // Stay collapsed
+          calendarHeight.value = withSpring(120);
         }
       }
     },
@@ -151,9 +125,15 @@ export default function CalendarScreen() {
   const animatedCalendarStyle = useAnimatedStyle(() => {
     return {
       height: calendarHeight.value,
-      transform: [{ translateY: translateY.value }],
     };
   });
+
+  const handleDateSelect = (date: Date | null) => {
+    if (date) {
+      setSelectedDate(date);
+      setSelectedDay(date.getDate());
+    }
+  };
 
   const renderCalendarHeader = () => (
     <View style={styles.calendarHeader}>
@@ -206,46 +186,92 @@ export default function CalendarScreen() {
     </ScrollView>
   );
 
-  const renderMonthView = () => (
-    <View style={styles.monthContainer}>
-      <View style={styles.weekDayHeader}>
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <Text key={day} style={styles.weekDayText}>{day}</Text>
-        ))}
+  const renderMonthView = () => {
+    if (isCollapsed) {
+      // When collapsed, show week-style layout
+      return (
+        <View style={styles.collapsedWeekContainer}>
+          <View style={styles.weekDayHeader}>
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              <Text key={day} style={styles.weekDayText}>{day}</Text>
+            ))}
+          </View>
+          <View style={styles.collapsedWeekRow}>
+            {getDates().map((date, index) => {
+              const isSelected = date?.toDateString() === selectedDate.toDateString();
+              const isToday = date?.toDateString() === new Date().toDateString();
+              
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.collapsedDayItem,
+                    isSelected && styles.selectedCollapsedDay,
+                    isToday && !isSelected && styles.todayCollapsedDay,
+                  ]}
+                  onPress={() => handleDateSelect(date)}
+                >
+                  <Text style={[
+                    styles.collapsedDayText,
+                    isSelected && styles.selectedCollapsedDayText,
+                    isToday && !isSelected && styles.todayCollapsedDayText,
+                  ]}>
+                    {date?.getDate()}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.monthContainer}>
+        <View style={styles.weekDayHeader}>
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+            <Text key={day} style={styles.weekDayText}>{day}</Text>
+          ))}
+        </View>
+        
+        <View style={styles.monthGrid}>
+          {getDates().map((date, index) => {
+            if (!date) {
+              return <View key={`empty-${index}`} style={styles.emptyDay} />;
+            }
+            
+            const isSelected = date.toDateString() === selectedDate.toDateString();
+            const isToday = date.toDateString() === new Date().toDateString();
+            
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.monthDayItem,
+                  isSelected && styles.selectedMonthDay,
+                  isToday && !isSelected && styles.todayMonthDay,
+                ]}
+                onPress={() => handleDateSelect(date)}
+              >
+                <Text style={[
+                  styles.monthDayText,
+                  isSelected && styles.selectedMonthDayText,
+                  isToday && !isSelected && styles.todayMonthDayText,
+                ]}>
+                  {date.getDate()}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        
+        {/* Drag indicator */}
+        <View style={styles.dragIndicator}>
+          <View style={styles.dragHandle} />
+        </View>
       </View>
-      
-      <View style={styles.monthGrid}>
-        {getDates().map((date, index) => {
-          if (!date) {
-            return <View key={`empty-${index}`} style={styles.emptyDay} />;
-          }
-          
-          const isSelected = date.toDateString() === selectedDate.toDateString();
-          const isToday = date.toDateString() === new Date().toDateString();
-          
-          return (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.monthDayItem,
-                isSelected && styles.selectedMonthDay,
-                isToday && !isSelected && styles.todayMonthDay,
-              ]}
-              onPress={() => handleDateSelect(date)}
-            >
-              <Text style={[
-                styles.monthDayText,
-                isSelected && styles.selectedMonthDayText,
-                isToday && !isSelected && styles.todayMonthDayText,
-              ]}>
-                {date.getDate()}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -253,19 +279,19 @@ export default function CalendarScreen() {
         <Text style={styles.title}>Calendar</Text>
         <View style={styles.viewToggle}>
           <TouchableOpacity
-            style={[styles.toggleButton, (viewMode === 'week' || isCollapsed) && styles.activeToggle]}
+            style={[styles.toggleButton, viewMode === 'week' && styles.activeToggle]}
             onPress={() => toggleViewMode('week')}
           >
-            <Text style={[styles.toggleText, (viewMode === 'week' || isCollapsed) && styles.activeToggleText]}>
+            <Text style={[styles.toggleText, viewMode === 'week' && styles.activeToggleText]}>
               Week
             </Text>
           </TouchableOpacity>
           
           <TouchableOpacity
-            style={[styles.toggleButton, viewMode === 'month' && !isCollapsed && styles.activeToggle]}
+            style={[styles.toggleButton, viewMode === 'month' && styles.activeToggle]}
             onPress={() => toggleViewMode('month')}
           >
-            <Text style={[styles.toggleText, viewMode === 'month' && !isCollapsed && styles.activeToggleText]}>
+            <Text style={[styles.toggleText, viewMode === 'month' && styles.activeToggleText]}>
               Month
             </Text>
           </TouchableOpacity>
@@ -274,16 +300,9 @@ export default function CalendarScreen() {
 
       {renderCalendarHeader()}
       
-      <PanGestureHandler onGestureEvent={gestureHandler}>
+      <PanGestureHandler onGestureEvent={gestureHandler} enabled={viewMode === 'month'}>
         <Animated.View style={[styles.calendarContainer, animatedCalendarStyle]}>
-          {(viewMode === 'week' || isCollapsed) ? renderWeekView() : renderMonthView()}
-          
-          {/* Drag indicator for month view */}
-          {viewMode === 'month' && !isCollapsed && (
-            <View style={styles.dragIndicator}>
-              <View style={styles.dragHandle} />
-            </View>
-          )}
+          {viewMode === 'week' ? renderWeekView() : renderMonthView()}
         </Animated.View>
       </PanGestureHandler>
 
@@ -299,7 +318,32 @@ export default function CalendarScreen() {
           </Text>
         </View>
 
-        {schedule.map((item) => (
+        {[
+          {
+            id: '1',
+            courseCode: 'CS 101',
+            courseName: 'Introduction to Computer Science',
+            startTime: '10:00 AM',
+            endTime: '10:50 AM',
+            type: 'lecture',
+          },
+          {
+            id: '2',
+            courseCode: 'MATH 241',
+            courseName: 'Calculus III',
+            startTime: '11:00 AM',
+            endTime: '12:15 PM',
+            type: 'lecture',
+          },
+          {
+            id: '3',
+            courseCode: 'PHYS 211',
+            courseName: 'University Physics I',
+            startTime: '1:00 PM',
+            endTime: '1:50 PM',
+            type: 'lecture',
+          },
+        ].map((item) => (
           <View key={item.id} style={styles.scheduleItem}>
             <View style={styles.scheduleItemContent}>
               <View style={styles.scheduleItemHeader}>
@@ -436,6 +480,7 @@ const styles = StyleSheet.create({
   },
   monthContainer: {
     padding: 16,
+    position: 'relative',
   },
   weekDayHeader: {
     flexDirection: 'row',
@@ -463,14 +508,14 @@ const styles = StyleSheet.create({
   selectedMonthDay: {
     backgroundColor: Colors.light.primary[600],
     borderRadius: 8,
-    marginHorizontal: 2, // Add small margin to prevent touching
+    marginHorizontal: 2,
   },
   todayMonthDay: {
     backgroundColor: Colors.light.primary[50],
     borderWidth: 1,
     borderColor: Colors.light.primary[400],
     borderRadius: 8,
-    marginHorizontal: 2, // Add small margin to prevent touching
+    marginHorizontal: 2,
   },
   monthDayText: {
     fontFamily: 'Inter-Medium',
@@ -487,6 +532,40 @@ const styles = StyleSheet.create({
     width: '14.28%',
     height: 36,
     marginBottom: 8,
+  },
+  collapsedWeekContainer: {
+    padding: 16,
+  },
+  collapsedWeekRow: {
+    flexDirection: 'row',
+  },
+  collapsedDayItem: {
+    flex: 1,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 2,
+  },
+  selectedCollapsedDay: {
+    backgroundColor: Colors.light.primary[600],
+    borderRadius: 8,
+  },
+  todayCollapsedDay: {
+    backgroundColor: Colors.light.primary[50],
+    borderWidth: 1,
+    borderColor: Colors.light.primary[400],
+    borderRadius: 8,
+  },
+  collapsedDayText: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 16,
+    color: Colors.light.neutral[900],
+  },
+  selectedCollapsedDayText: {
+    color: 'white',
+  },
+  todayCollapsedDayText: {
+    color: Colors.light.primary[700],
   },
   dragIndicator: {
     position: 'absolute',
