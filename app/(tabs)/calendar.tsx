@@ -386,18 +386,12 @@ const styles = StyleSheet.create({
   selectedMonthDay: {
     backgroundColor: Colors.light.primary[600],
     borderRadius: 8,
-    width: 32,
-    height: 32,
-    alignSelf: 'center',
   },
   todayMonthDay: {
     backgroundColor: Colors.light.primary[50],
     borderWidth: 1,
     borderColor: Colors.light.primary[400],
     borderRadius: 8,
-    width: 32,
-    height: 32,
-    alignSelf: 'center',
   },
   monthDayText: {
     fontFamily: 'Inter-Medium',
