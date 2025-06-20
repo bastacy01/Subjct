@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: Colors.light.primary[600],
     paddingHorizontal: 24,
-    paddingTop: Platform.OS === 'ios' ? 50 : 30,
+    paddingTop: Platform.OS === 'ios' ? 55 : 35,
     paddingBottom: 24,
     flexDirection: 'row',
     alignItems: 'center',
