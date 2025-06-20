@@ -77,16 +77,16 @@ export default function CourseDetailScreen() {
     }
   ];
 
-  const handleLecturePress = (lecture: any) => {
-    // Set the lecture as selected and open the modal
-    setSelectedLecture(lecture);
-    setShowLectureDetail(true);
-  };
-
   // Check if a lecture should be highlighted (currently playing AND from this course)
   const isLectureHighlighted = (lecture: any) => {
     return currentLecture?.id === lecture.id && 
            currentLecture?.course === lecture.course;
+  };
+
+  const handleLecturePress = (lecture: any) => {
+    // Set the lecture as selected and open the modal
+    setSelectedLecture(lecture);
+    setShowLectureDetail(true);
   };
 
   return (
@@ -262,10 +262,9 @@ const styles = StyleSheet.create({
   playButtonContainer: {
     width: 48,
     height: 48,
-    borderRadius: 24,
-    backgroundColor: Colors.light.neutral[100],
     alignItems: 'center',
     justifyContent: 'center',
+    // Removed backgroundColor and borderRadius to remove gray circle
   },
   errorText: {
     fontFamily: 'Inter-Medium',

@@ -271,5 +271,6 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
+    // Removed backgroundColor and borderRadius to remove gray circle
   },
 });
