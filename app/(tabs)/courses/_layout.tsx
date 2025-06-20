@@ -14,7 +14,7 @@ export default function CoursesLayout() {
         name="[id]"
         options={{
           headerTitle: "", // Remove the "index" text by setting empty title
-          headerShadowVisible: true,
+          headerShadowVisible: false,
           headerStyle: {
             backgroundColor: Colors.light.primary[600],
           },
