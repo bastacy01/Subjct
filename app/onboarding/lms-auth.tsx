@@ -7,7 +7,7 @@ import Button from '@/components/common/Button';
 import Colors from '@/constants/Colors';
 import ProgressBar from '@/components/common/ProgressBar';
 import { WebView } from 'react-native-webview';
-import { ExternalLink, Eye, EyeOff } from 'lucide-react-native';
+import { Eye, EyeOff } from 'lucide-react-native';
 
 export default function LmsAuthScreen() {
   const { schoolId } = useLocalSearchParams<{ schoolId: string }>();
@@ -63,13 +63,6 @@ export default function LmsAuthScreen() {
         router.push('/onboarding/loading');
       }
     }, 1500);
-  };
-
-  const handleOpenExternalBrowser = () => {
-    if (school?.lmsLoginUrl) {
-      Linking.openURL(school.lmsLoginUrl);
-      simulateSuccessfulLogin();
-    }
   };
 
   // In a real app, this would be an actual authentication flow
@@ -236,17 +229,6 @@ export default function LmsAuthScreen() {
               loading={isLoading}
               style={styles.button}
             />
-            
-            {Platform.OS !== 'web' && school.id !== 'demo-university' && (
-              <Button
-                title="Open in Browser"
-                variant="outline"
-                onPress={handleOpenExternalBrowser}
-                style={[styles.button, styles.secondaryButton]}
-                textStyle={styles.secondaryButtonText}
-                icon={<ExternalLink size={18} color={Colors.light.primary[600]} />}
-              />
-            )}
             
             <Button
               title="Back"

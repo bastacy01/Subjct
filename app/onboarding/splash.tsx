@@ -133,9 +133,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   subtitle: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter-Medium', // Changed from 'Inter-Regular' to 'Inter-Medium' for more weight
     fontSize: 18,
-    color: Colors.light.neutral[700],
+    color: Colors.light.neutral[900], // Changed from neutral[700] to neutral[900] for darker/black color
     textAlign: 'center',
     maxWidth: '80%',
   },
