@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { Audio } from 'expo-av';
 
 interface Lecture {
@@ -63,6 +63,40 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   const [selectedLecture, setSelectedLecture] = useState<Lecture | null>(null);
   const [showLectureDetail, setShowLectureDetail] = useState(false);
   const [highlightedLectureId, setHighlightedLectureId] = useState<string | null>(null);
+  
+  // Timer ref for progress updates
+  const progressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Start progress timer when playing
+  useEffect(() => {
+    if (isPlaying) {
+      progressTimer.current = setInterval(() => {
+        setCurrentTime(prevTime => {
+          const newTime = prevTime + 1;
+          // Stop at total time
+          if (newTime >= totalTime) {
+            setIsPlaying(false);
+            return totalTime;
+          }
+          return newTime;
+        });
+      }, 1000);
+    } else {
+      // Clear timer when paused
+      if (progressTimer.current) {
+        clearInterval(progressTimer.current);
+        progressTimer.current = null;
+      }
+    }
+
+    // Cleanup on unmount or when isPlaying changes
+    return () => {
+      if (progressTimer.current) {
+        clearInterval(progressTimer.current);
+        progressTimer.current = null;
+      }
+    };
+  }, [isPlaying, totalTime]);
 
   const togglePlayback = async (lecture: Lecture) => {
     if (currentLecture?.id === lecture.id) {
@@ -78,6 +112,10 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
       }
       setCurrentLecture(lecture);
       setHighlightedLectureId(lecture.id);
+      
+      // Reset time when starting a new lecture
+      setCurrentTime(0);
+      
       const { sound: newSound } = await Audio.Sound.createAsync(
         { uri: 'https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav' },
         { shouldPlay: true, volume }
@@ -134,6 +172,15 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
         }
       : undefined;
   }, [sound]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (progressTimer.current) {
+        clearInterval(progressTimer.current);
+      }
+    };
+  }, []);
 
   const value: AudioPlayerContextType = {
     currentLecture,
