@@ -11,6 +11,15 @@ export interface University {
 // List of Division 1 universities in the US with their LMS information
 export const universities: University[] = [
   {
+    id: 'demo-university',
+    name: 'Demo University',
+    shortName: 'Demo U',
+    conference: 'Demo Conference',
+    lmsProvider: 'canvas',
+    lmsLoginUrl: 'https://demo.instructure.com/',
+    logoUrl: 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+  },
+  {
     id: 'alabama',
     name: 'University of Alabama',
     shortName: 'Alabama',

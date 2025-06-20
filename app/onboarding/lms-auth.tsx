@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Platform, Linking } from 'react-native';
+import { View, Text, StyleSheet, Platform, Linking, TextInput, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { universities, University } from '@/constants/Universities';
@@ -7,13 +7,17 @@ import Button from '@/components/common/Button';
 import Colors from '@/constants/Colors';
 import ProgressBar from '@/components/common/ProgressBar';
 import { WebView } from 'react-native-webview';
-import { ExternalLink } from 'lucide-react-native';
+import { ExternalLink, Eye, EyeOff } from 'lucide-react-native';
 
 export default function LmsAuthScreen() {
   const { schoolId } = useLocalSearchParams<{ schoolId: string }>();
   const [school, setSchool] = useState<University | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isWebViewVisible, setIsWebViewVisible] = useState(false);
+  const [showDemoLogin, setShowDemoLogin] = useState(false);
+  const [demoEmail, setDemoEmail] = useState('');
+  const [demoPassword, setDemoPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -21,6 +25,10 @@ export default function LmsAuthScreen() {
       const foundSchool = universities.find(uni => uni.id === schoolId);
       if (foundSchool) {
         setSchool(foundSchool);
+        // Show demo login form if it's Demo University
+        if (foundSchool.id === 'demo-university') {
+          setShowDemoLogin(true);
+        }
       }
     }
     
@@ -30,6 +38,12 @@ export default function LmsAuthScreen() {
   }, [schoolId]);
 
   const handleLoginWithLMS = () => {
+    if (school?.id === 'demo-university') {
+      // For demo university, show the demo login form
+      setShowDemoLogin(true);
+      return;
+    }
+
     if (Platform.OS === 'web') {
       // For web, open in a new tab
       window.open(school?.lmsLoginUrl, '_blank');
@@ -38,6 +52,21 @@ export default function LmsAuthScreen() {
       // For native, show WebView
       setIsWebViewVisible(true);
     }
+  };
+
+  const handleDemoLogin = () => {
+    if (!demoEmail || !demoPassword) {
+      return;
+    }
+    
+    setIsLoading(true);
+    // Simulate login process
+    setTimeout(() => {
+      if (isMounted.current) {
+        setIsLoading(false);
+        router.push('/onboarding/loading');
+      }
+    }, 1500);
   };
 
   const handleOpenExternalBrowser = () => {
@@ -125,17 +154,77 @@ export default function LmsAuthScreen() {
                 </Text>
               </View>
             </View>
+
+            {showDemoLogin && school.id === 'demo-university' && (
+              <Animated.View 
+                style={styles.demoLoginContainer}
+                entering={FadeIn.duration(300)}
+              >
+                <Text style={styles.demoLoginTitle}>Demo Login</Text>
+                <Text style={styles.demoLoginSubtitle}>
+                  Use any email and password to continue with the demo
+                </Text>
+                
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputLabel}>Email</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    value={demoEmail}
+                    onChangeText={setDemoEmail}
+                    placeholder="student@demo.edu"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputLabel}>Password</Text>
+                  <View style={styles.passwordContainer}>
+                    <TextInput
+                      style={[styles.textInput, styles.passwordInput]}
+                      value={demoPassword}
+                      onChangeText={setDemoPassword}
+                      placeholder="Enter password"
+                      secureTextEntry={!showPassword}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                    />
+                    <TouchableOpacity
+                      style={styles.eyeButton}
+                      onPress={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff size={20} color={Colors.light.neutral[500]} />
+                      ) : (
+                        <Eye size={20} color={Colors.light.neutral[500]} />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Animated.View>
+            )}
           </View>
           
           <View style={styles.buttonContainer}>
-            <Button
-              title="Log in with LMS"
-              onPress={handleLoginWithLMS}
-              loading={isLoading}
-              style={styles.button}
-            />
+            {showDemoLogin && school.id === 'demo-university' ? (
+              <Button
+                title="Sign In to Demo"
+                onPress={handleDemoLogin}
+                loading={isLoading}
+                disabled={!demoEmail || !demoPassword}
+                style={styles.button}
+              />
+            ) : (
+              <Button
+                title="Log in with LMS"
+                onPress={handleLoginWithLMS}
+                loading={isLoading}
+                style={styles.button}
+              />
+            )}
             
-            {Platform.OS !== 'web' && (
+            {!showDemoLogin && Platform.OS !== 'web' && (
               <Button
                 title="Open in Browser"
                 variant="outline"
@@ -203,6 +292,7 @@ const styles = StyleSheet.create({
   },
   schoolInfoContainer: {
     alignItems: 'center',
+    marginBottom: 32,
   },
   schoolName: {
     fontFamily: 'Inter-Bold',
@@ -221,6 +311,61 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Medium',
     fontSize: 14,
     color: Colors.light.primary[700],
+  },
+  demoLoginContainer: {
+    width: '100%',
+    maxWidth: 320,
+    backgroundColor: Colors.light.neutral[50],
+    borderRadius: 16,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: Colors.light.neutral[200],
+  },
+  demoLoginTitle: {
+    fontFamily: 'Inter-Bold',
+    fontSize: 18,
+    color: Colors.light.neutral[900],
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  demoLoginSubtitle: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 14,
+    color: Colors.light.neutral[600],
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+    color: Colors.light.neutral[700],
+    marginBottom: 6,
+  },
+  textInput: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: Colors.light.neutral[300],
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontFamily: 'Inter-Regular',
+    fontSize: 16,
+    color: Colors.light.neutral[900],
+  },
+  passwordContainer: {
+    position: 'relative',
+  },
+  passwordInput: {
+    paddingRight: 48,
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
+    padding: 4,
   },
   buttonContainer: {
     padding: 24,
