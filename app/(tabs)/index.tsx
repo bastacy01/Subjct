@@ -8,7 +8,6 @@ export default function HomeScreen() {
   const { 
     currentLecture, 
     isPlaying, 
-    highlightedLectureId,
     handleLectureSelect, 
     handlePlayButtonPress 
   } = useAudioPlayer();
@@ -86,12 +85,18 @@ export default function HomeScreen() {
     }
   };
 
+  // Check if a lecture should be highlighted (currently playing AND from same course)
+  const isLectureHighlighted = (lecture: any) => {
+    return currentLecture?.id === lecture.id && 
+           currentLecture?.course === lecture.course;
+  };
+
   const renderLectureCard = (lecture: any) => (
     <TouchableOpacity
       key={lecture.id}
       style={[
         styles.lectureCard,
-        highlightedLectureId === lecture.id && styles.activeLectureCard
+        isLectureHighlighted(lecture) && styles.activeLectureCard
       ]}
       onPress={() => handleLectureSelect(lecture)}
     >
@@ -120,7 +125,9 @@ export default function HomeScreen() {
           handlePlayButtonPress(lecture);
         }}
       >
-        {currentLecture?.id === lecture.id && isPlaying ? (
+        {currentLecture?.id === lecture.id && 
+         currentLecture?.course === lecture.course && 
+         isPlaying ? (
           <Pause size={24} color={Colors.light.primary[600]} />
         ) : (
           <Play size={24} color={Colors.light.primary[600]} />

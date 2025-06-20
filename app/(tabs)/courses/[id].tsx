@@ -11,7 +11,6 @@ export default function CourseDetailScreen() {
   const { 
     currentLecture, 
     isPlaying, 
-    highlightedLectureId,
     handleLectureSelect, 
     handlePlayButtonPress,
     setSelectedLecture,
@@ -84,6 +83,12 @@ export default function CourseDetailScreen() {
     setShowLectureDetail(true);
   };
 
+  // Check if a lecture should be highlighted (currently playing AND from this course)
+  const isLectureHighlighted = (lecture: any) => {
+    return currentLecture?.id === lecture.id && 
+           currentLecture?.course === lecture.course;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -107,7 +112,7 @@ export default function CourseDetailScreen() {
               key={lecture.id}
               style={[
                 styles.lectureCard,
-                highlightedLectureId === lecture.id && styles.activeLectureCard
+                isLectureHighlighted(lecture) && styles.activeLectureCard
               ]}
               onPress={() => handleLectureSelect(lecture)}
             >
@@ -136,7 +141,9 @@ export default function CourseDetailScreen() {
                   handlePlayButtonPress(lecture);
                 }}
               >
-                {currentLecture?.id === lecture.id && isPlaying ? (
+                {currentLecture?.id === lecture.id && 
+                 currentLecture?.course === lecture.course && 
+                 isPlaying ? (
                   <Pause size={24} color={Colors.light.primary[600]} />
                 ) : (
                   <Play size={24} color={Colors.light.primary[600]} />
