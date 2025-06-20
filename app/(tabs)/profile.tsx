@@ -23,14 +23,14 @@ export default function ProfileScreen() {
   const menuItems = [
     {
       id: 'account',
-      title: 'Account',
+      title: 'Profile',
       icon: <User size={20} color={Colors.light.neutral[600]} />,
       action: () => console.log('Account settings'),
     },
     {
       id: 'academics',
-      title: 'Academic Profile',
-      icon: <BookOpen size={20} color={Colors.light.neutral[600]} />,
+      title: 'Settings',
+      icon: <Settings size={20} color={Colors.light.neutral[600]} />,
       action: () => console.log('Academic profile'),
     },
     {
