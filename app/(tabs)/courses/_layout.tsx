@@ -13,14 +13,15 @@ export default function CoursesLayout() {
       <Stack.Screen
         name="[id]"
         options={{
-          headerTitle: "",
+          headerTitle: "", // Remove the "index" text by setting empty title
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: Colors.light.primary[600],
           },
           headerTintColor: 'white',
           headerLeftContainerStyle: {
-            paddingLeft: 8,
+            paddingLeft: 16, // Increase padding to align with other text
+            paddingTop: 8, // Add top padding to align vertically with text
           },
           headerBackTitleVisible: false,
         }}
