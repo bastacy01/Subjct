@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     fontSize: 28,
     color: 'white',
+    marginTop: 20, // Add vertical offset to move text down
   },
   boltLogoContainer: {
     width: 48,
