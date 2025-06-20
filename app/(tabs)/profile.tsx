@@ -7,8 +7,8 @@ import { router } from 'expo-router';
 export default function ProfileScreen() {
   // Mock user data
   const user = {
-    name: 'Alex Johnson',
-    email: 'alex.johnson@university.edu',
+    name: 'Ben Stacy',
+    email: 'ben.stacy@university.edu',
     studentId: '1234567',
     major: 'Computer Science',
     year: 'Junior',
@@ -23,7 +23,7 @@ export default function ProfileScreen() {
   const menuItems = [
     {
       id: 'account',
-      title: 'Account Settings',
+      title: 'Account',
       icon: <User size={20} color={Colors.light.neutral[600]} />,
       action: () => console.log('Account settings'),
     },
@@ -35,7 +35,7 @@ export default function ProfileScreen() {
     },
     {
       id: 'notifications',
-      title: 'Notification Preferences',
+      title: 'Notifications',
       icon: <Bell size={20} color={Colors.light.neutral[600]} />,
       action: () => console.log('Notification preferences'),
     },
@@ -53,7 +53,7 @@ export default function ProfileScreen() {
     },
     {
       id: 'settings',
-      title: 'App Settings',
+      title: 'Settings',
       icon: <Settings size={20} color={Colors.light.neutral[600]} />,
       action: () => console.log('App settings'),
     },
