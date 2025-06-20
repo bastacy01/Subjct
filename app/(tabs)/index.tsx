@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 4,
     elevation: 3,
+    marginTop: 10,
   },
   boltLogo: {
     width: 38,
