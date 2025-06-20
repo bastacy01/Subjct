@@ -16,7 +16,7 @@ export default function CoursesLayout() {
           headerTitle: "", // Remove the "index" text by setting empty title
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: Colors.light.primary[600],
+            backgroundColor: Colors.light.primary[100],
           },
           headerTintColor: 'white',
           headerLeftContainerStyle: {
