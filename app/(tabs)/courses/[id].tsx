@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import Colors from '@/constants/Colors';
-import { Play, Pause, Clock, Calendar } from 'lucide-react-native';
+import { Play, Pause, Clock, Calendar, PlayCircle } from 'lucide-react-native';
 import { semesters } from '@/constants/MockData';
 import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 
@@ -15,7 +15,8 @@ export default function CourseDetailScreen() {
     handlePlayButtonPress,
     setSelectedLecture,
     setShowLectureDetail,
-    getRemainingTime
+    getRemainingTime,
+    hasLectureStarted
   } = useAudioPlayer();
   
   // Find the course from the mock data
@@ -123,7 +124,11 @@ export default function CourseDetailScreen() {
                 
                 <View style={styles.lectureMetadata}>
                   <View style={styles.metadataItem}>
-                    <Clock size={14} color={Colors.light.neutral[600]} />
+                    {hasLectureStarted(lecture) ? (
+                      <PlayCircle size={14} color={Colors.light.primary[600]} />
+                    ) : (
+                      <Clock size={14} color={Colors.light.neutral[600]} />
+                    )}
                     <Text style={styles.lectureMetadataText}>{getRemainingTime(lecture)}</Text>
                   </View>
                   <View style={styles.metadataItem}>

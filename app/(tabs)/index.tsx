@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, Linking } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Play, Pause, Clock, Calendar } from 'lucide-react-native';
+import { Play, Pause, Clock, Calendar, PlayCircle } from 'lucide-react-native';
 import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 
 export default function HomeScreen() {
@@ -10,7 +10,8 @@ export default function HomeScreen() {
     isPlaying, 
     handleLectureSelect, 
     handlePlayButtonPress,
-    getRemainingTime
+    getRemainingTime,
+    hasLectureStarted
   } = useAudioPlayer();
 
   // Get current date and format it
@@ -120,7 +121,11 @@ export default function HomeScreen() {
         
         <View style={styles.lectureMetadata}>
           <View style={styles.metadataItem}>
-            <Clock size={14} color={Colors.light.neutral[600]} />
+            {hasLectureStarted(lecture) ? (
+              <PlayCircle size={14} color={Colors.light.primary[600]} />
+            ) : (
+              <Clock size={14} color={Colors.light.neutral[600]} />
+            )}
             <Text style={styles.metadataText}>{getRemainingTime(lecture)}</Text>
           </View>
           <View style={styles.metadataItem}>

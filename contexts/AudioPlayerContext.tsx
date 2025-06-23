@@ -43,6 +43,7 @@ interface AudioPlayerContextType {
   handleTimeChange: (newTime: number) => void;
   formatTime: (seconds: number) => string;
   getRemainingTime: (lecture: Lecture) => string;
+  hasLectureStarted: (lecture: Lecture) => boolean;
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
@@ -209,16 +210,27 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const hasLectureStarted = (lecture: Lecture) => {
+    return (lectureProgress[lecture.id] || 0) > 0;
+  };
+
   const getRemainingTime = (lecture: Lecture) => {
     const totalSeconds = durationToSeconds(lecture.duration);
     const progressSeconds = lectureProgress[lecture.id] || 0;
+    
+    // If lecture hasn't been started, return just the duration without any additional text
+    if (progressSeconds === 0) {
+      return lecture.duration;
+    }
+    
     const remainingSeconds = Math.max(0, totalSeconds - progressSeconds);
     
     if (remainingSeconds === 0) {
       return lecture.duration; // Show original duration if completed
     }
     
-    return formatTime(remainingSeconds) + ' left';
+    const remainingMinutes = Math.ceil(remainingSeconds / 60);
+    return `${remainingMinutes} min`;
   };
 
   useEffect(() => {
@@ -266,6 +278,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     handleTimeChange,
     formatTime,
     getRemainingTime,
+    hasLectureStarted,
   };
 
   return (
