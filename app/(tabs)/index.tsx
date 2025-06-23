@@ -15,27 +15,27 @@ export default function HomeScreen() {
   const recentLectures = [
     {
       id: '1',
-      title: 'Introduction to Neural Networks',
-      course: 'CS 440',
+      title: 'Intro to AI with Python',
+      course: 'CS 210',
       instructor: 'Dr. Sarah Chen',
-      duration: '1:15:00',
+      duration: '59:30',
       date: '2024-03-15',
-      description: 'This lecture covers the fundamental concepts of neural networks, including perceptrons, activation functions, and backpropagation.'
+      description: 'This lecture covers the fundamental concepts of artificial intelligence, including basic Python syntax and programming examples.'
     },
     {
       id: '2',
-      title: 'Quantum Mechanics Fundamentals',
+      title: '3 Laws of Thermodynamics',
       course: 'PHYS 211',
       instructor: 'Dr. Michael Brown',
       duration: '55:30',
       date: '2024-03-14',
-      description: 'An introduction to the basic principles of quantum mechanics, wave functions, and the Schrödinger equation.'
+      description: 'An introduction to the basic principles of the 3 laws of thermodynamics.'
     },
     {
       id: '3',
       title: 'Linear Algebra Applications',
       course: 'MATH 241',
-      instructor: 'Prof. Robert Johnson',
+      instructor: 'Dr. Robert Johnson',
       duration: '1:05:45',
       date: '2024-03-13',
       description: 'Exploring practical applications of linear algebra in computer graphics, data analysis, and machine learning.'
