@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   dayItem: {
-    width: 50,
+    width: 40,
     height: 64,
     alignItems: 'center',
     justifyContent: 'center',
