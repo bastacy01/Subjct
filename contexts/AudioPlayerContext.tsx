@@ -53,13 +53,24 @@ interface AudioPlayerProviderProps {
   children: ReactNode;
 }
 
+// Helper function to convert duration string (e.g., "59:30") to seconds
+const durationToSeconds = (duration: string): number => {
+  const parts = duration.split(':');
+  if (parts.length === 2) {
+    const minutes = parseInt(parts[0], 10);
+    const seconds = parseInt(parts[1], 10);
+    return minutes * 60 + seconds;
+  }
+  return 0;
+};
+
 export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ children }) => {
   const [currentLecture, setCurrentLecture] = useState<Lecture | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [volume, setVolume] = useState(0.7);
-  const [currentTime, setCurrentTime] = useState(615); // 10:15 in seconds
-  const [totalTime, setTotalTime] = useState(3027); // 50:27 in seconds
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
   const [selectedLecture, setSelectedLecture] = useState<Lecture | null>(null);
   const [showLectureDetail, setShowLectureDetail] = useState(false);
   const [highlightedLectureId, setHighlightedLectureId] = useState<string | null>(null);
@@ -113,7 +124,9 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
       setCurrentLecture(lecture);
       setHighlightedLectureId(lecture.id);
       
-      // Reset time when starting a new lecture
+      // Set the total time based on the lecture's duration and reset current time to 0
+      const lectureTotalTime = durationToSeconds(lecture.duration);
+      setTotalTime(lectureTotalTime);
       setCurrentTime(0);
       
       const { sound: newSound } = await Audio.Sound.createAsync(
@@ -129,6 +142,11 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     // Update both current lecture and highlighted lecture
     setCurrentLecture(lecture);
     setHighlightedLectureId(lecture.id);
+    
+    // Set the total time based on the lecture's duration and reset current time to 0
+    const lectureTotalTime = durationToSeconds(lecture.duration);
+    setTotalTime(lectureTotalTime);
+    setCurrentTime(0);
   };
 
   const handleMiniPlayerPress = () => {
