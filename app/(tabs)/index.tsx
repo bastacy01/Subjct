@@ -46,20 +46,20 @@ export default function HomeScreen() {
     {
       id: '4',
       title: 'Advanced Data Structures',
-      course: 'CS 440',
+      course: 'CS 210',
       instructor: 'Dr. Sarah Chen',
-      duration: '1:30:00',
+      duration: '55:20',
       date: '2024-03-18',
       description: 'Deep dive into advanced data structures including red-black trees and B-trees.'
     },
     {
       id: '5',
-      title: 'Wave Mechanics',
+      title: 'Estimation',
       course: 'PHYS 211',
       instructor: 'Dr. Michael Brown',
       duration: '1:00:00',
       date: '2024-03-19',
-      description: 'Understanding wave mechanics and their applications in quantum systems.'
+      description: 'Understanding estimation and the process of calculating approximate answers.'
     },
     {
       id: '6',
