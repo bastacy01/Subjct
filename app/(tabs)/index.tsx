@@ -15,7 +15,7 @@ export default function HomeScreen() {
   const recentLectures = [
     {
       id: '1',
-      title: 'Intro to AI with Python',
+      title: 'Intro to Artificial Intelligence with Python',
       course: 'CS 210',
       instructor: 'Dr. Sarah Chen',
       duration: '59:30',
