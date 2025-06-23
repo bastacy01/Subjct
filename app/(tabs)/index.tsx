@@ -9,7 +9,8 @@ export default function HomeScreen() {
     currentLecture, 
     isPlaying, 
     handleLectureSelect, 
-    handlePlayButtonPress 
+    handlePlayButtonPress,
+    getRemainingTime
   } = useAudioPlayer();
 
   // Get current date and format it
@@ -120,7 +121,7 @@ export default function HomeScreen() {
         <View style={styles.lectureMetadata}>
           <View style={styles.metadataItem}>
             <Clock size={14} color={Colors.light.neutral[600]} />
-            <Text style={styles.metadataText}>{lecture.duration}</Text>
+            <Text style={styles.metadataText}>{getRemainingTime(lecture)}</Text>
           </View>
           <View style={styles.metadataItem}>
             <Calendar size={14} color={Colors.light.neutral[600]} />

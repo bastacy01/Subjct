@@ -11,6 +11,10 @@ interface Lecture {
   description: string;
 }
 
+interface LectureProgress {
+  [lectureId: string]: number; // Store current time for each lecture
+}
+
 interface AudioPlayerContextType {
   currentLecture: Lecture | null;
   isPlaying: boolean;
@@ -21,6 +25,7 @@ interface AudioPlayerContextType {
   selectedLecture: Lecture | null;
   showLectureDetail: boolean;
   highlightedLectureId: string | null;
+  lectureProgress: LectureProgress;
   setCurrentLecture: (lecture: Lecture | null) => void;
   setIsPlaying: (playing: boolean) => void;
   setSound: (sound: Audio.Sound | null) => void;
@@ -37,6 +42,7 @@ interface AudioPlayerContextType {
   handleVolumeChange: (newVolume: number) => Promise<void>;
   handleTimeChange: (newTime: number) => void;
   formatTime: (seconds: number) => string;
+  getRemainingTime: (lecture: Lecture) => string;
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
@@ -74,16 +80,23 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   const [selectedLecture, setSelectedLecture] = useState<Lecture | null>(null);
   const [showLectureDetail, setShowLectureDetail] = useState(false);
   const [highlightedLectureId, setHighlightedLectureId] = useState<string | null>(null);
+  const [lectureProgress, setLectureProgress] = useState<LectureProgress>({});
   
   // Timer ref for progress updates
   const progressTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Start progress timer when playing
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && currentLecture) {
       progressTimer.current = setInterval(() => {
         setCurrentTime(prevTime => {
           const newTime = prevTime + 1;
+          // Update the lecture progress
+          setLectureProgress(prev => ({
+            ...prev,
+            [currentLecture.id]: newTime
+          }));
+          
           // Stop at total time
           if (newTime >= totalTime) {
             setIsPlaying(false);
@@ -107,7 +120,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
         progressTimer.current = null;
       }
     };
-  }, [isPlaying, totalTime]);
+  }, [isPlaying, totalTime, currentLecture]);
 
   const togglePlayback = async (lecture: Lecture) => {
     if (currentLecture?.id === lecture.id) {
@@ -124,10 +137,13 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
       setCurrentLecture(lecture);
       setHighlightedLectureId(lecture.id);
       
-      // Set the total time based on the lecture's duration and reset current time to 0
+      // Set the total time based on the lecture's duration
       const lectureTotalTime = durationToSeconds(lecture.duration);
       setTotalTime(lectureTotalTime);
-      setCurrentTime(0);
+      
+      // Get the saved progress for this lecture, or start from 0
+      const savedProgress = lectureProgress[lecture.id] || 0;
+      setCurrentTime(savedProgress);
       
       const { sound: newSound } = await Audio.Sound.createAsync(
         { uri: 'https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav' },
@@ -143,10 +159,13 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     setCurrentLecture(lecture);
     setHighlightedLectureId(lecture.id);
     
-    // Set the total time based on the lecture's duration and reset current time to 0
+    // Set the total time based on the lecture's duration
     const lectureTotalTime = durationToSeconds(lecture.duration);
     setTotalTime(lectureTotalTime);
-    setCurrentTime(0);
+    
+    // Get the saved progress for this lecture, or start from 0
+    const savedProgress = lectureProgress[lecture.id] || 0;
+    setCurrentTime(savedProgress);
   };
 
   const handleMiniPlayerPress = () => {
@@ -171,6 +190,13 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
 
   const handleTimeChange = (newTime: number) => {
     setCurrentTime(newTime);
+    // Update the lecture progress
+    if (currentLecture) {
+      setLectureProgress(prev => ({
+        ...prev,
+        [currentLecture.id]: newTime
+      }));
+    }
     // In a real app, you would seek to this position in the audio
     if (sound) {
       sound.setPositionAsync(newTime * 1000); // Convert to milliseconds
@@ -181,6 +207,18 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const getRemainingTime = (lecture: Lecture) => {
+    const totalSeconds = durationToSeconds(lecture.duration);
+    const progressSeconds = lectureProgress[lecture.id] || 0;
+    const remainingSeconds = Math.max(0, totalSeconds - progressSeconds);
+    
+    if (remainingSeconds === 0) {
+      return lecture.duration; // Show original duration if completed
+    }
+    
+    return formatTime(remainingSeconds) + ' left';
   };
 
   useEffect(() => {
@@ -210,6 +248,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     selectedLecture,
     showLectureDetail,
     highlightedLectureId,
+    lectureProgress,
     setCurrentLecture,
     setIsPlaying,
     setSound,
@@ -226,6 +265,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     handleVolumeChange,
     handleTimeChange,
     formatTime,
+    getRemainingTime,
   };
 
   return (

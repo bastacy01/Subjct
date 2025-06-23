@@ -14,7 +14,8 @@ export default function CourseDetailScreen() {
     handleLectureSelect, 
     handlePlayButtonPress,
     setSelectedLecture,
-    setShowLectureDetail
+    setShowLectureDetail,
+    getRemainingTime
   } = useAudioPlayer();
   
   // Find the course from the mock data
@@ -123,7 +124,7 @@ export default function CourseDetailScreen() {
                 <View style={styles.lectureMetadata}>
                   <View style={styles.metadataItem}>
                     <Clock size={14} color={Colors.light.neutral[600]} />
-                    <Text style={styles.lectureMetadataText}>{lecture.duration}</Text>
+                    <Text style={styles.lectureMetadataText}>{getRemainingTime(lecture)}</Text>
                   </View>
                   <View style={styles.metadataItem}>
                     <Calendar size={14} color={Colors.light.neutral[600]} />
