@@ -57,7 +57,7 @@ export default function HomeScreen() {
       title: 'Estimation',
       course: 'PHYS 211',
       instructor: 'Dr. Michael Brown',
-      duration: '1:00:00',
+      duration: '58:40',
       date: '2024-03-19',
       description: 'Understanding estimation and the process of calculating approximate answers.'
     },
@@ -65,8 +65,8 @@ export default function HomeScreen() {
       id: '6',
       title: 'Eigenvalues and Eigenvectors',
       course: 'MATH 241',
-      instructor: 'Prof. Robert Johnson',
-      duration: '1:15:00',
+      instructor: 'Dr. Robert Johnson',
+      duration: '49:50',
       date: '2024-03-20',
       description: 'Comprehensive overview of eigenvalues, eigenvectors, and their applications.'
     }
