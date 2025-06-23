@@ -44,6 +44,7 @@ interface AudioPlayerContextType {
   formatTime: (seconds: number) => string;
   getRemainingTime: (lecture: Lecture) => string;
   hasLectureStarted: (lecture: Lecture) => boolean;
+  getLectureProgress: (lecture: Lecture) => number;
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
@@ -214,6 +215,14 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     return (lectureProgress[lecture.id] || 0) > 0;
   };
 
+  const getLectureProgress = (lecture: Lecture) => {
+    const totalSeconds = durationToSeconds(lecture.duration);
+    const progressSeconds = lectureProgress[lecture.id] || 0;
+    
+    if (totalSeconds === 0) return 0;
+    return Math.min(progressSeconds / totalSeconds, 1);
+  };
+
   const getRemainingTime = (lecture: Lecture) => {
     const totalSeconds = durationToSeconds(lecture.duration);
     const progressSeconds = lectureProgress[lecture.id] || 0;
@@ -230,7 +239,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     }
     
     const remainingMinutes = Math.ceil(remainingSeconds / 60);
-    return `${remainingMinutes} min`;
+    return `${remainingMinutes} min left`;
   };
 
   useEffect(() => {
@@ -279,6 +288,7 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
     formatTime,
     getRemainingTime,
     hasLectureStarted,
+    getLectureProgress,
   };
 
   return (
