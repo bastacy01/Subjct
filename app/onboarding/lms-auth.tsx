@@ -142,12 +142,6 @@ export default function LmsAuthScreen() {
           </View>
           
           <View style={styles.demoModalContent}>
-            <View style={styles.canvasLogoContainer}>
-              <View style={styles.canvasLogo}>
-                <Text style={styles.canvasLogoText}>Canvas</Text>
-              </View>
-            </View>
-            
             <Text style={styles.demoLoginTitle}>Demo University</Text>
             <Text style={styles.demoLoginSubtitle}>
               Use any email and password to continue with the demo
@@ -377,20 +371,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.light.neutral[50],
-  },
-  canvasLogoContainer: {
-    marginBottom: 32,
-  },
-  canvasLogo: {
-    backgroundColor: Colors.light.primary[600],
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  canvasLogoText: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 24,
-    color: 'white',
   },
   demoLoginTitle: {
     fontFamily: 'Inter-Bold',

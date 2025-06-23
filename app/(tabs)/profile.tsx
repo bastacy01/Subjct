@@ -12,7 +12,7 @@ export default function ProfileScreen() {
     studentId: '1234567',
     major: 'Computer Science',
     year: 'Junior',
-    imageUrl: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    imageUrl: require('@/assets/images/IMG_4882.jpg'),
   };
 
   const handleLogout = () => {
@@ -66,7 +66,7 @@ export default function ProfileScreen() {
       </View>
       
       <View style={styles.profileSection}>
-        <Image source={{ uri: user.imageUrl }} style={styles.profileImage} />
+        <Image source={user.imageUrl} style={styles.profileImage} />
         
         <View style={styles.profileInfo}>
           <Text style={styles.userName}>{user.name}</Text>
