@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
-import { X, Play, Pause, SkipForward, SkipBack, VolumeX, Volume2 } from 'lucide-react-native';
+import { X, Play, Pause, SkipForward, SkipBack, VolumeX, Volume2, Clock, Calendar } from 'lucide-react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import Colors from '@/constants/Colors';
@@ -74,9 +74,11 @@ const PlayerModal: React.FC = () => {
               
               <View style={styles.detailMetadata}>
                 <View style={styles.detailMetadataItem}>
+                  <Clock size={14} color={Colors.light.neutral[600]} />
                   <Text style={styles.detailMetadataText}>{selectedLecture.duration}</Text>
                 </View>
                 <View style={styles.detailMetadataItem}>
+                  <Calendar size={14} color={Colors.light.neutral[600]} />
                   <Text style={styles.detailMetadataText}>
                     {new Date(selectedLecture.date).toLocaleDateString()}
                   </Text>
