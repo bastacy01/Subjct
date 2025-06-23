@@ -13,7 +13,8 @@ export default function HomeScreen() {
     handlePlayButtonPress,
     getRemainingTime,
     hasLectureStarted,
-    getLectureProgress
+    getLectureProgress,
+    highlightedLectureId
   } = useAudioPlayer();
 
   // Get current date and format it
@@ -104,8 +105,8 @@ export default function HomeScreen() {
 
   // Check if a lecture should be highlighted (currently playing AND from same course)
   const isLectureHighlighted = (lecture: any) => {
-    return currentLecture?.id === lecture.id && 
-           currentLecture?.course === lecture.course;
+    const lectureKey = `${lecture.course}-${lecture.id}`;
+    return highlightedLectureId === lectureKey;
   };
 
   const renderLectureCard = (lecture: any) => (
@@ -152,9 +153,7 @@ export default function HomeScreen() {
           handlePlayButtonPress(lecture);
         }}
       >
-        {currentLecture?.id === lecture.id && 
-         currentLecture?.course === lecture.course && 
-         isPlaying ? (
+        {isLectureHighlighted(lecture) && isPlaying ? (
           <Pause size={24} color={Colors.light.primary[600]} />
         ) : (
           <Play size={24} color={Colors.light.primary[600]} />

@@ -18,7 +18,8 @@ export default function CourseDetailScreen() {
     setShowLectureDetail,
     getRemainingTime,
     hasLectureStarted,
-    getLectureProgress
+    getLectureProgress,
+    highlightedLectureId
   } = useAudioPlayer();
   
   // Find the course from the mock data
@@ -32,7 +33,7 @@ export default function CourseDetailScreen() {
     );
   }
 
-  // Mock lectures data
+  // Mock lectures data - using course code from the found course
   const lectures = [
     {
       id: '1',
@@ -83,8 +84,8 @@ export default function CourseDetailScreen() {
 
   // Check if a lecture should be highlighted (currently playing AND from this course)
   const isLectureHighlighted = (lecture: any) => {
-    return currentLecture?.id === lecture.id && 
-           currentLecture?.course === lecture.course;
+    const lectureKey = `${lecture.course}-${lecture.id}`;
+    return highlightedLectureId === lectureKey;
   };
 
   const handleLecturePress = (lecture: any) => {
@@ -155,9 +156,7 @@ export default function CourseDetailScreen() {
                   handlePlayButtonPress(lecture);
                 }}
               >
-                {currentLecture?.id === lecture.id && 
-                 currentLecture?.course === lecture.course && 
-                 isPlaying ? (
+                {isLectureHighlighted(lecture) && isPlaying ? (
                   <Pause size={24} color={Colors.light.primary[600]} />
                 ) : (
                   <Play size={24} color={Colors.light.primary[600]} />
