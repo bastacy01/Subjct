@@ -66,8 +66,11 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      const height = Math.min(filteredData.length * 48, maxHeight);
-      dropdownHeight.value = withTiming(height, {
+      // Calculate the exact height needed based on filtered data
+      const itemHeight = 48; // Height of each item
+      const actualHeight = Math.min(filteredData.length * itemHeight, maxHeight);
+      
+      dropdownHeight.value = withTiming(actualHeight, {
         duration: 300,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       });
@@ -235,11 +238,15 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
               keyExtractor={(item) => item.id}
               nestedScrollEnabled
               keyboardShouldPersistTaps="handled"
-              renderItem={({ item }) => (
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.flatListContent}
+              renderItem={({ item, index }) => (
                 <TouchableOpacity
                   style={[
                     styles.item,
-                    selectedItem?.id === item.id && styles.selectedItem
+                    selectedItem?.id === item.id && styles.selectedItem,
+                    // Remove border from last item to prevent extra spacing
+                    index === filteredData.length - 1 && styles.lastItem
                   ]}
                   onPress={() => handleSelect(item)}
                 >
@@ -331,11 +338,19 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
   },
+  flatListContent: {
+    flexGrow: 1,
+  },
   item: {
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.neutral[200],
+    minHeight: 48,
+    justifyContent: 'center',
+  },
+  lastItem: {
+    borderBottomWidth: 0,
   },
   selectedItem: {
     backgroundColor: Colors.light.primary[50],
@@ -360,6 +375,8 @@ const styles = StyleSheet.create({
   emptyContainer: {
     padding: 16,
     alignItems: 'center',
+    minHeight: 48,
+    justifyContent: 'center',
   },
   emptyText: {
     fontFamily: 'Inter-Regular',
