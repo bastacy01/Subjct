@@ -12,6 +12,19 @@ export default function HomeScreen() {
     handlePlayButtonPress 
   } = useAudioPlayer();
 
+  // Get current date and format it
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  };
+
+  // Get tomorrow's date
+  const getTomorrowDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  };
+
   const recentLectures = [
     {
       id: '1',
@@ -19,7 +32,7 @@ export default function HomeScreen() {
       course: 'CS 210',
       instructor: 'Dr. Sarah Chen',
       duration: '59:30',
-      date: '2024-03-15',
+      date: getCurrentDate(),
       description: 'This lecture covers the fundamental concepts of artificial intelligence, including basic Python syntax and programming examples.'
     },
     {
@@ -28,7 +41,7 @@ export default function HomeScreen() {
       course: 'PHYS 211',
       instructor: 'Dr. Michael Brown',
       duration: '55:30',
-      date: '2024-03-14',
+      date: getCurrentDate(),
       description: 'An introduction to the basic principles of the 3 Laws of Thermodynamics.'
     },
     {
@@ -37,7 +50,7 @@ export default function HomeScreen() {
       course: 'MATH 241',
       instructor: 'Dr. Robert Johnson',
       duration: '1:05:45',
-      date: '2024-03-13',
+      date: getCurrentDate(),
       description: 'Exploring practical applications of linear algebra in computer graphics, data analysis, and machine learning.'
     }
   ];
@@ -49,7 +62,7 @@ export default function HomeScreen() {
       course: 'CS 210',
       instructor: 'Dr. Sarah Chen',
       duration: '55:20',
-      date: '2024-03-18',
+      date: getTomorrowDate(),
       description: 'Deep dive into advanced data structures including red-black trees and B-trees.'
     },
     {
@@ -58,7 +71,7 @@ export default function HomeScreen() {
       course: 'PHYS 211',
       instructor: 'Dr. Michael Brown',
       duration: '58:40',
-      date: '2024-03-19',
+      date: getTomorrowDate(),
       description: 'Understanding estimation and the process of calculating approximate answers.'
     },
     {
@@ -67,7 +80,7 @@ export default function HomeScreen() {
       course: 'MATH 241',
       instructor: 'Dr. Robert Johnson',
       duration: '49:50',
-      date: '2024-03-20',
+      date: getTomorrowDate(),
       description: 'Comprehensive overview of eigenvalues, eigenvectors, and their applications.'
     }
   ];
