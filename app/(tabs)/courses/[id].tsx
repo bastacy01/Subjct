@@ -38,7 +38,7 @@ export default function CourseDetailScreen() {
     {
       id: '1',
       title: 'Introduction to the Course',
-      duration: '50:00',
+      duration: '59:30',
       date: '2024-03-15',
       description: 'Overview of course objectives and syllabus review.',
       instructor: course.instructor,
