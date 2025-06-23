@@ -24,7 +24,7 @@ export default function HomeScreen() {
     },
     {
       id: '2',
-      title: '3 Laws of Thermodynamics',
+      title: 'Laws of Thermodynamics',
       course: 'PHYS 211',
       instructor: 'Dr. Michael Brown',
       duration: '55:30',
