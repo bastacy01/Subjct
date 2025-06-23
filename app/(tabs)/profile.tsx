@@ -7,8 +7,8 @@ import { router } from 'expo-router';
 export default function ProfileScreen() {
   // Mock user data
   const user = {
-    name: 'Ben Stacy',
-    email: 'ben.stacy@university.edu',
+    name: 'User Name',
+    email: 'demo@university.edu',
     studentId: '1234567',
     major: 'Computer Science',
     year: 'Junior',
