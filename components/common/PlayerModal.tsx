@@ -21,6 +21,29 @@ const PlayerModal: React.FC = () => {
     formatTime,
   } = useAudioPlayer();
 
+  // Get current date and format it
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  };
+
+  // Get tomorrow's date
+  const getTomorrowDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  };
+
+  // Determine if this is a recent or upcoming lecture and set appropriate date
+  const getLectureDate = (lecture: any) => {
+    // Check if this is one of the recent lectures (ids 1, 2, 3)
+    if (['1', '2', '3'].includes(lecture.id)) {
+      return getCurrentDate();
+    }
+    // Otherwise it's an upcoming lecture (ids 4, 5, 6)
+    return getTomorrowDate();
+  };
+
   const handleProgressGesture = (event: any) => {
     const { state, x } = event.nativeEvent;
     
@@ -80,7 +103,7 @@ const PlayerModal: React.FC = () => {
                 <View style={styles.detailMetadataItem}>
                   <Calendar size={14} color={Colors.light.neutral[600]} />
                   <Text style={styles.detailMetadataText}>
-                    {new Date(selectedLecture.date).toLocaleDateString()}
+                    {new Date(getLectureDate(selectedLecture)).toLocaleDateString()}
                   </Text>
                 </View>
               </View>
