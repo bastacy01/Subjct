@@ -24,8 +24,8 @@ export const semesters: Semester[] = [
     endDate: '2025-12-15',
     courses: [
       {
-        id: 'cs101',
-        code: 'CS 101',
+        id: 'cs210',
+        code: 'CS 210',
         name: 'Introduction to Computer Science',
         instructor: 'Dr. Jane Smith',
         credits: 3,
@@ -49,15 +49,6 @@ export const semesters: Semester[] = [
         credits: 4,
         meetingTimes: 'MWF 1:00-1:50, T 3:00-4:50 (Lab)',
         location: 'Physics Building 210'
-      },
-      {
-        id: 'engl120',
-        code: 'ENGL 120',
-        name: 'Composition II',
-        instructor: 'Prof. Sarah Williams',
-        credits: 3,
-        meetingTimes: 'TTh 9:30-10:45',
-        location: 'Humanities Hall 112'
       }
     ]
   },
