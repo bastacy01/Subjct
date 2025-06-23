@@ -168,10 +168,17 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   const handleLectureSelect = (lecture: Lecture) => {
     const lectureKey = getLectureKey(lecture);
     
-    // Only set as current lecture and highlight if we're actually starting playback
-    // This function is now only used for opening the modal, not for setting current state
-    setSelectedLecture(lecture);
-    setShowLectureDetail(true);
+    // Update both current lecture and highlighted lecture
+    setCurrentLecture(lecture);
+    setHighlightedLectureId(lectureKey);
+    
+    // Set the total time based on the lecture's duration
+    const lectureTotalTime = durationToSeconds(lecture.duration);
+    setTotalTime(lectureTotalTime);
+    
+    // Get the saved progress for this lecture, or start from 0
+    const savedProgress = lectureProgress[lectureKey] || 0;
+    setCurrentTime(savedProgress);
   };
 
   const handleMiniPlayerPress = () => {
