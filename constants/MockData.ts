@@ -27,7 +27,7 @@ export const semesters: Semester[] = [
         id: 'cs210',
         code: 'CS 210',
         name: 'Introduction to Computer Science',
-        instructor: 'Dr. Jane Smith',
+        instructor: 'Dr. Sarah Chen',
         credits: 3,
         meetingTimes: 'MWF 10:00-10:50',
         location: 'Science Building 101'
@@ -35,17 +35,17 @@ export const semesters: Semester[] = [
       {
         id: 'math241',
         code: 'MATH 241',
-        name: 'Calculus III',
+        name: 'Calculus II',
         instructor: 'Dr. Robert Johnson',
         credits: 4,
-        meetingTimes: 'TTh 11:00-12:15',
+        meetingTimes: 'TTh 11:00-12:05',
         location: 'Math Building 305'
       },
       {
         id: 'phys211',
         code: 'PHYS 211',
-        name: 'University Physics I',
-        instructor: 'Dr. Michael Chen',
+        name: 'Physics I',
+        instructor: 'Dr. Michael Brown',
         credits: 4,
         meetingTimes: 'MWF 1:00-1:50, T 3:00-4:50 (Lab)',
         location: 'Physics Building 210'
