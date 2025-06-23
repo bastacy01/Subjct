@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, Linking } from 'react-native';
 import Colors from '@/constants/Colors';
-import { Play, Pause, Clock, Calendar, PlayCircle } from 'lucide-react-native';
+import { Play, Pause, Clock, Calendar, CirclePlay as PlayCircle } from 'lucide-react-native';
 import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 
 export default function HomeScreen() {

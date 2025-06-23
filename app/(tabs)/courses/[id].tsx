@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import Colors from '@/constants/Colors';
-import { Play, Pause, Clock, Calendar, PlayCircle } from 'lucide-react-native';
+import { Play, Pause, Clock, Calendar, CirclePlay as PlayCircle } from 'lucide-react-native';
 import { semesters } from '@/constants/MockData';
 import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 
