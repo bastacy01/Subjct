@@ -29,7 +29,7 @@ export default function HomeScreen() {
       instructor: 'Dr. Michael Brown',
       duration: '55:30',
       date: '2024-03-14',
-      description: 'An introduction to the basic principles of the 3 laws of thermodynamics.'
+      description: 'An introduction to the basic principles of the 3 Laws of Thermodynamics.'
     },
     {
       id: '3',
