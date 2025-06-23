@@ -57,7 +57,7 @@ export default function CalendarScreen() {
   const schedule = [
     {
       id: '1',
-      courseCode: 'CS 101',
+      courseCode: 'CS 210',
       courseName: 'Introduction to Computer Science',
       startTime: '10:00 AM',
       endTime: '10:50 AM',
@@ -66,7 +66,7 @@ export default function CalendarScreen() {
     {
       id: '2',
       courseCode: 'MATH 241',
-      courseName: 'Calculus III',
+      courseName: 'Calculus II',
       startTime: '11:00 AM',
       endTime: '12:15 PM',
       type: 'lecture',
@@ -74,7 +74,7 @@ export default function CalendarScreen() {
     {
       id: '3',
       courseCode: 'PHYS 211',
-      courseName: 'University Physics I',
+      courseName: 'Physics I',
       startTime: '1:00 PM',
       endTime: '1:50 PM',
       type: 'lecture',
