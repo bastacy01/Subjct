@@ -59,8 +59,8 @@ export const semesters: Semester[] = [
     endDate: '2026-05-07',
     courses: [
       {
-        id: 'cs201',
-        code: 'CS 201',
+        id: 'cs211',
+        code: 'CS 202',
         name: 'Data Structures and Algorithms',
         instructor: 'Dr. Thomas Lee',
         credits: 3,
@@ -103,7 +103,7 @@ export const semesters: Semester[] = [
     endDate: '2026-07-30',
     courses: [
       {
-        id: 'cs215',
+        id: 'cs220',
         code: 'CS 215',
         name: 'Database Systems',
         instructor: 'Dr. Amanda Garcia',
