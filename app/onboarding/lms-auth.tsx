@@ -18,6 +18,7 @@ export default function LmsAuthScreen() {
   const [demoEmail, setDemoEmail] = useState('');
   const [demoPassword, setDemoPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -51,7 +52,12 @@ export default function LmsAuthScreen() {
   };
 
   const handleDemoLogin = () => {
-    if (!demoEmail || !demoPassword) {
+    // Clear any previous error
+    setLoginError('');
+    
+    // Validate credentials
+    if (demoEmail !== 'demo@university.edu' || demoPassword !== 'bolt') {
+      setLoginError('Invalid email or password. Please try again.');
       return;
     }
     
@@ -87,6 +93,21 @@ export default function LmsAuthScreen() {
         simulateSuccessfulLogin();
       }
     }, 5000);
+  };
+
+  // Clear error when user starts typing
+  const handleEmailChange = (text: string) => {
+    setDemoEmail(text);
+    if (loginError) {
+      setLoginError('');
+    }
+  };
+
+  const handlePasswordChange = (text: string) => {
+    setDemoPassword(text);
+    if (loginError) {
+      setLoginError('');
+    }
   };
 
   if (!school) {
@@ -144,7 +165,7 @@ export default function LmsAuthScreen() {
           <View style={styles.demoModalContent}>
             <Text style={styles.demoLoginTitle}>Demo University</Text>
             <Text style={styles.demoLoginSubtitle}>
-              Use any email and password to continue with the demo
+              Enter your university credentials to continue
             </Text>
             
             <View style={styles.inputContainer}>
@@ -152,8 +173,8 @@ export default function LmsAuthScreen() {
               <TextInput
                 style={styles.textInput}
                 value={demoEmail}
-                onChangeText={setDemoEmail}
-                placeholder="student@demo.edu"
+                onChangeText={handleEmailChange}
+                placeholder="demo@university.edu"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -166,7 +187,7 @@ export default function LmsAuthScreen() {
                 <TextInput
                   style={[styles.textInput, styles.passwordInput]}
                   value={demoPassword}
-                  onChangeText={setDemoPassword}
+                  onChangeText={handlePasswordChange}
                   placeholder="Enter password"
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
@@ -184,6 +205,10 @@ export default function LmsAuthScreen() {
                 </TouchableOpacity>
               </View>
             </View>
+
+            {loginError ? (
+              <Text style={styles.errorMessage}>{loginError}</Text>
+            ) : null}
 
             <Button
               title="Log In"
@@ -419,6 +444,15 @@ const styles = StyleSheet.create({
     right: 12,
     top: 12,
     padding: 4,
+  },
+  errorMessage: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 14,
+    color: Colors.light.error[500],
+    textAlign: 'center',
+    marginBottom: 16,
+    width: '100%',
+    maxWidth: 320,
   },
   loginButton: {
     width: '100%',
