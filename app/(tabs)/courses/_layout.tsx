@@ -13,7 +13,7 @@ export default function CoursesLayout() {
       <Stack.Screen
         name="[id]"
         options={{
-          headerTitle: "", // Keep empty title
+          headerTitle: "Courses", // Changed from "" to "Courses"
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: Colors.light.primary[600],
@@ -23,7 +23,7 @@ export default function CoursesLayout() {
             color: Colors.light.primary[600], // Make title text same color as background (invisible)
           },
           headerLeftContainerStyle: {
-            paddingLeft: 34, // Align with other text content
+            paddingLeft: 24, // Changed from 34 to 24 to align with text content
             paddingTop: 8,
           },
           headerBackTitleVisible: false, // Hide back button title

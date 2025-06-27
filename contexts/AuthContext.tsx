@@ -23,6 +23,7 @@ interface AuthProviderProps {
 }
 
 const AUTH_KEY = '@subjct_auth_status';
+const LECTURE_PROGRESS_KEY = '@subjct_lecture_progress';
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -56,7 +57,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
+      // Remove auth status but keep lecture progress
       await AsyncStorage.removeItem(AUTH_KEY);
+      // Note: We're NOT removing LECTURE_PROGRESS_KEY so progress persists across logins
       setIsAuthenticated(false);
     } catch (error) {
       console.error('Error removing auth status:', error);

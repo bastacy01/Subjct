@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { Audio } from 'expo-av';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Lecture {
   id: string;
@@ -77,6 +78,9 @@ const getLectureKey = (lecture: Lecture): string => {
   return `${lecture.course}-${lecture.id}`;
 };
 
+// Storage keys
+const LECTURE_PROGRESS_KEY = '@subjct_lecture_progress';
+
 export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ children }) => {
   const [currentLecture, setCurrentLecture] = useState<Lecture | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -91,6 +95,35 @@ export const AudioPlayerProvider: React.FC<AudioPlayerProviderProps> = ({ childr
   
   // Timer ref for progress updates
   const progressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Load lecture progress from storage on app start
+  useEffect(() => {
+    loadLectureProgress();
+  }, []);
+
+  // Save lecture progress to storage whenever it changes
+  useEffect(() => {
+    saveLectureProgress();
+  }, [lectureProgress]);
+
+  const loadLectureProgress = async () => {
+    try {
+      const savedProgress = await AsyncStorage.getItem(LECTURE_PROGRESS_KEY);
+      if (savedProgress) {
+        setLectureProgress(JSON.parse(savedProgress));
+      }
+    } catch (error) {
+      console.error('Error loading lecture progress:', error);
+    }
+  };
+
+  const saveLectureProgress = async () => {
+    try {
+      await AsyncStorage.setItem(LECTURE_PROGRESS_KEY, JSON.stringify(lectureProgress));
+    } catch (error) {
+      console.error('Error saving lecture progress:', error);
+    }
+  };
 
   // Start progress timer when playing
   useEffect(() => {
