@@ -23,7 +23,7 @@ export default function CoursesLayout() {
             color: Colors.light.primary[600], // Make title text same color as background (invisible)
           },
           headerLeftContainerStyle: {
-            paddingLeft: 34, // Align with other text content
+            paddingLeft: 54, // Align with other text content
             paddingTop: 8,
           },
           headerBackTitleVisible: false, // Hide back button title
