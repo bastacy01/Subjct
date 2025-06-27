@@ -60,7 +60,7 @@ export const semesters: Semester[] = [
     courses: [
       {
         id: 'cs211',
-        code: 'CS 202',
+        code: 'CS 211',
         name: 'Data Structures and Algorithms',
         instructor: 'Dr. Thomas Lee',
         credits: 3,
