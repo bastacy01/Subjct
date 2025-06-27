@@ -7,12 +7,14 @@ import Button from '@/components/common/Button';
 import ProgressBar from '@/components/common/ProgressBar';
 import { Semester, semesters } from '@/constants/MockData';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function CourseSelectScreen() {
   const [selectedSemester, setSelectedSemester] = useState<Semester>(semesters[0]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login } = useAuth();
 
   const toggleCourseSelection = (courseId: string) => {
     if (selectedCourses.includes(courseId)) {
@@ -30,9 +32,13 @@ export default function CourseSelectScreen() {
     }
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     setIsSubmitting(true);
-    setTimeout(() => {
+    
+    // Simulate setup process
+    setTimeout(async () => {
+      // Mark user as authenticated
+      await login();
       setIsSubmitting(false);
       router.replace('/(tabs)');
     }, 800);

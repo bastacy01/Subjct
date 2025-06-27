@@ -3,8 +3,11 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Platform }
 import Colors from '@/constants/Colors';
 import { User, BookOpen, Settings, LogOut, Bell, CircleHelp as HelpCircle, ChevronRight, ShieldCheck } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function ProfileScreen() {
+  const { logout } = useAuth();
+
   // Mock user data
   const user = {
     name: 'User Name',
@@ -15,8 +18,9 @@ export default function ProfileScreen() {
     imageUrl: require('@/assets/images/IMG_4882.jpg'),
   };
 
-  const handleLogout = () => {
-    // In a real app, you would clear the auth state here
+  const handleLogout = async () => {
+    // Clear authentication state and redirect to onboarding
+    await logout();
     router.replace('/onboarding/splash');
   };
 
