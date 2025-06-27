@@ -4,7 +4,7 @@ import Colors from '@/constants/Colors';
 import { Clock, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react-native';
 
 export default function CalendarScreen() {
-  const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
+  const [viewMode, setViewMode] = useState<'week' | 'month'>('month');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date().getDate());
 
@@ -375,9 +375,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 6,
+    gap: 4, // Add gap between all items
   },
   monthDayItem: {
-    width: '14.28%',
+    width: '13.28%', // Slightly reduced to account for gap
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
@@ -405,7 +406,7 @@ const styles = StyleSheet.create({
     color: Colors.light.primary[700],
   },
   emptyDay: {
-    width: '14.28%',
+    width: '13.28%', // Slightly reduced to account for gap
     height: 36,
     marginBottom: 8,
   },
