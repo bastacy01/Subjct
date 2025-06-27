@@ -13,7 +13,7 @@ export default function CoursesLayout() {
       <Stack.Screen
         name="[id]"
         options={{
-          headerTitle: "", // Remove the "index" text by setting empty title
+          headerTitle: "", // This ensures no title is shown
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: Colors.light.primary[600],
@@ -23,7 +23,7 @@ export default function CoursesLayout() {
             paddingLeft: 16, // Increase padding to align with other text
             paddingTop: 8, // Add top padding to align vertically with text
           },
-          headerBackTitleVisible: false,
+          headerBackTitleVisible: false, // This hides the back button title
         }}
       />
     </Stack>
