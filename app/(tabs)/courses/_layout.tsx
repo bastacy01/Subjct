@@ -5,7 +5,7 @@ export default function CoursesLayout() {
   return (
     <Stack>
       <Stack.Screen 
-        name="back"
+        name="index"
         options={{
           headerShown: false,
         }}
