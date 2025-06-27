@@ -123,8 +123,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 160,
-    height: 160,
+    width: 180,
+    height: 180,
   },
   title: {
     fontFamily: 'Inter-Bold',
