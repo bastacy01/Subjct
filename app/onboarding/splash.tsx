@@ -84,9 +84,9 @@ export default function SplashScreen() {
     >
       <Animated.View style={[styles.logoContainer, logoStyle]}>
         <Image 
-          source={{ uri: 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=1' }}
+          source={require('@/assets/images/815DB5EA-3BE6-4656-BF2C-16B0450DB4AE.PNG')}
           style={styles.logo}
-          resizeMode="cover"
+          resizeMode="contain"
         />
       </Animated.View>
       
@@ -120,10 +120,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
   logo: {
-    width: '100%',
-    height: '100%',
+    width: 80,
+    height: 80,
   },
   title: {
     fontFamily: 'Inter-Bold',
