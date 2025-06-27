@@ -13,17 +13,20 @@ export default function CoursesLayout() {
       <Stack.Screen
         name="[id]"
         options={{
-          headerTitle: "", // This ensures no title is shown
+          headerTitle: "", // Keep empty title
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: Colors.light.primary[600],
           },
-          headerTintColor: 'white',
-          headerLeftContainerStyle: {
-            paddingLeft: 16, // Increase padding to align with other text
-            paddingTop: 8, // Add top padding to align vertically with text
+          headerTintColor: 'white', // Keep back arrow white
+          headerTitleStyle: {
+            color: Colors.light.primary[600], // Make title text same color as background (invisible)
           },
-          headerBackTitleVisible: false, // This hides the back button title
+          headerLeftContainerStyle: {
+            paddingLeft: 24, // Align with other text content
+            paddingTop: 8,
+          },
+          headerBackTitleVisible: false, // Hide back button title
         }}
       />
     </Stack>
