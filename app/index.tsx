@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Redirect } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
@@ -6,9 +6,19 @@ import Colors from '@/constants/Colors';
 
 export default function Index() {
   const { isAuthenticated, isLoading } = useAuth();
+  const [showSplash, setShowSplash] = useState(true);
 
-  // Show loading state while checking authentication
-  if (isLoading) {
+  // Always show splash screen for at least 2 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Show loading state while checking authentication or during splash
+  if (isLoading || showSplash) {
     return (
       <View style={styles.loadingContainer}>
         {/* The splash screen will be visible during this time */}

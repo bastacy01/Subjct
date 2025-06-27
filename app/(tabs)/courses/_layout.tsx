@@ -18,7 +18,7 @@ export default function CoursesLayout() {
           headerStyle: {
             backgroundColor: Colors.light.primary[600],
           },
-          headerTintColor: 'white',
+          headerTintColor: Colors.light.primary[600], // Make text same color as background to hide it
           headerLeftContainerStyle: {
             paddingLeft: 16, // Increase padding to align with other text
             paddingTop: 8, // Add top padding to align vertically with text
