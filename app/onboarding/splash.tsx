@@ -84,7 +84,7 @@ export default function SplashScreen() {
     >
       <Animated.View style={[styles.logoContainer, logoStyle]}>
         <Image 
-          source={require('@/assets/images/graduationcap.png')}
+          source={require('@/assets/images/graduationcap1.png')}
           style={styles.logo}
           resizeMode="contain"
         />
