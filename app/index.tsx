@@ -18,7 +18,6 @@ export default function Index() {
   const { isAuthenticated, isLoading } = useAuth();
   const [showSplash, setShowSplash] = useState(true);
   const [shouldRedirect, setShouldRedirect] = useState(false);
-  const [hasShownSplash, setHasShownSplash] = useState(false); // Track if splash has been shown
 
   // Animation values
   const logoScale = useSharedValue(0.8);
@@ -27,10 +26,8 @@ export default function Index() {
   const subtitleOpacity = useSharedValue(0);
 
   useEffect(() => {
-    // Only start splash animation after auth loading is complete and if we haven't shown splash yet
-    if (!isLoading && !hasShownSplash) {
-      setHasShownSplash(true); // Mark that we're showing the splash
-      
+    // Only start splash animation after auth loading is complete
+    if (!isLoading) {
       // Entrance animations sequence
       logoScale.value = withTiming(1, { 
         duration: 800, 
@@ -59,11 +56,8 @@ export default function Index() {
       }, 2500);
 
       return () => clearTimeout(timer);
-    } else if (!isLoading && hasShownSplash) {
-      // If we've already shown splash and auth is loaded, redirect immediately
-      setShouldRedirect(true);
     }
-  }, [isLoading, hasShownSplash]);
+  }, [isLoading]);
 
   // Animated styles
   const logoStyle = useAnimatedStyle(() => {
@@ -100,8 +94,8 @@ export default function Index() {
     );
   }
 
-  // Show splash screen only if we haven't shown it yet
-  if (showSplash && !hasShownSplash) {
+  // Show splash screen
+  if (showSplash) {
     return (
       <Animated.View 
         style={styles.container}
@@ -127,7 +121,7 @@ export default function Index() {
     );
   }
 
-  // Redirect after splash screen or immediately if splash was already shown
+  // Redirect after splash screen
   if (shouldRedirect) {
     if (isAuthenticated) {
       return <Redirect href="/(tabs)" />;
