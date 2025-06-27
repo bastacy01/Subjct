@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   logoContainer: {
-    width: 200,
-    height: 200,
+    width: 180,
+    height: 180,
     borderRadius: 50,
     marginBottom: 32,
     shadowColor: '#000',
