@@ -110,9 +110,9 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   logoContainer: {
-    width: 160,
-    height: 160,
-    borderRadius: 40,
+    width: 200,
+    height: 200,
+    borderRadius: 50,
     marginBottom: 32,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -123,8 +123,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 160,
+    height: 160,
   },
   title: {
     fontFamily: 'Inter-Bold',
