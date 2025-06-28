@@ -227,7 +227,7 @@ export default function LmsAuthScreen() {
         <>
           <View style={styles.header}>
             <ProgressBar progress={0.5} style={styles.progressBar} />
-            <Text style={styles.title}>Connect to Your LMS</Text>
+            <Text style={styles.title}>Connect to LMS</Text>
           </View>
           
           <View style={styles.contentContainer}>
@@ -243,7 +243,7 @@ export default function LmsAuthScreen() {
           
           <View style={styles.buttonContainer}>
             <Button
-              title="Log in with LMS"
+              title="Log in"
               onPress={handleLoginWithLMS}
               loading={isLoading}
               style={styles.button}
