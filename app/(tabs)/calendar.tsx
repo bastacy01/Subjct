@@ -4,7 +4,7 @@ import Colors from '@/constants/Colors';
 import { Clock, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react-native';
 
 export default function CalendarScreen() {
-  const [viewMode, setViewMode] = useState<'week' | 'month'>('month');
+  const [viewMode, setViewMode] = useState<'week' | 'month'>('week'); // Changed default to 'week'
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date().getDate());
 
