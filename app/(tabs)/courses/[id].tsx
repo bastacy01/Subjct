@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
   header: {
     padding: 24,
     paddingTop: 16, // Reduced from 0 to create space below the back arrow
+    marginBottom: 8,
     backgroundColor: Colors.light.primary[600],
   },
   courseCode: {
