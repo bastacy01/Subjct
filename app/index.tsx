@@ -28,6 +28,14 @@ export default function Index() {
   useEffect(() => {
     // Only start splash animation after auth loading is complete
     if (!isLoading) {
+      // If user is not authenticated, skip the splash screen and go directly to onboarding
+      if (!isAuthenticated) {
+        setShowSplash(false);
+        setShouldRedirect(true);
+        return;
+      }
+
+      // For authenticated users, show the splash screen
       // Entrance animations sequence
       logoScale.value = withTiming(1, { 
         duration: 800, 
@@ -57,7 +65,7 @@ export default function Index() {
 
       return () => clearTimeout(timer);
     }
-  }, [isLoading]);
+  }, [isLoading, isAuthenticated]);
 
   // Animated styles
   const logoStyle = useAnimatedStyle(() => {
@@ -94,8 +102,8 @@ export default function Index() {
     );
   }
 
-  // Show splash screen
-  if (showSplash) {
+  // Show splash screen only for authenticated users
+  if (showSplash && isAuthenticated) {
     return (
       <Animated.View 
         style={styles.container}
@@ -121,7 +129,7 @@ export default function Index() {
     );
   }
 
-  // Redirect after splash screen
+  // Redirect after splash screen or immediately if not authenticated
   if (shouldRedirect) {
     if (isAuthenticated) {
       return <Redirect href="/(tabs)" />;
