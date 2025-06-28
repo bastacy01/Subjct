@@ -29,7 +29,7 @@ export default function CoursesLayout() {
               onPress={() => router.back()}
               style={{
                 paddingLeft: 4, // Align with course content below
-                paddingRight: 20,
+                paddingRight: 25,
                 paddingVertical: 12,
                 marginTop: 4,
               }}
