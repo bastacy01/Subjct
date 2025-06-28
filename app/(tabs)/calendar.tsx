@@ -88,7 +88,7 @@ export default function CalendarScreen() {
     }
   };
 
-  // Helper function to check if a date is today
+  // Helper function to check if a date is today (the actual current date)
   const isToday = (date: Date | null) => {
     if (!date) return false;
     const today = new Date();
@@ -97,10 +97,10 @@ export default function CalendarScreen() {
            date.getFullYear() === today.getFullYear();
   };
 
-  // Helper function to check if a date is the selected date
+  // Helper function to check if a date is the user-selected date
   const isSelectedDate = (date: Date | null) => {
     if (!date) return false;
-    return date.getDate() === selectedDay &&
+    return date.getDate() === selectedDate.getDate() &&
            date.getMonth() === selectedDate.getMonth() &&
            date.getFullYear() === selectedDate.getFullYear();
   };
