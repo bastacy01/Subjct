@@ -88,6 +88,23 @@ export default function CalendarScreen() {
     }
   };
 
+  // Helper function to check if a date is today
+  const isToday = (date: Date | null) => {
+    if (!date) return false;
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
+  };
+
+  // Helper function to check if a date is the selected date
+  const isSelectedDate = (date: Date | null) => {
+    if (!date) return false;
+    return date.getDate() === selectedDay &&
+           date.getMonth() === selectedDate.getMonth() &&
+           date.getFullYear() === selectedDate.getFullYear();
+  };
+
   const renderCalendarHeader = () => (
     <View style={styles.calendarHeader}>
       <TouchableOpacity onPress={() => navigateDate('prev')} style={styles.navigationButton}>
@@ -114,8 +131,8 @@ export default function CalendarScreen() {
   const renderWeekView = () => (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.weekContainer}>
       {getDates().map((date, index) => {
-        const isSelected = date?.toDateString() === selectedDate.toDateString();
-        const isToday = date?.toDateString() === new Date().toDateString();
+        const isSelected = isSelectedDate(date);
+        const isTodayDate = isToday(date);
         
         return (
           <TouchableOpacity
@@ -123,7 +140,7 @@ export default function CalendarScreen() {
             style={[
               styles.dayItem,
               isSelected && styles.selectedDayItem,
-              isToday && !isSelected && styles.todayItem,
+              isTodayDate && !isSelected && styles.todayItem,
             ]}
             onPress={() => handleDateSelect(date)}
           >
@@ -153,8 +170,8 @@ export default function CalendarScreen() {
             return <View key={`empty-${index}`} style={styles.emptyDay} />;
           }
           
-          const isSelected = date.toDateString() === selectedDate.toDateString();
-          const isToday = date.toDateString() === new Date().toDateString();
+          const isSelected = isSelectedDate(date);
+          const isTodayDate = isToday(date);
           
           return (
             <TouchableOpacity
@@ -162,14 +179,14 @@ export default function CalendarScreen() {
               style={[
                 styles.monthDayItem,
                 isSelected && styles.selectedMonthDay,
-                isToday && !isSelected && styles.todayMonthDay,
+                isTodayDate && !isSelected && styles.todayMonthDay,
               ]}
               onPress={() => handleDateSelect(date)}
             >
               <Text style={[
                 styles.monthDayText,
                 isSelected && styles.selectedMonthDayText,
-                isToday && !isSelected && styles.todayMonthDayText,
+                isTodayDate && !isSelected && styles.todayMonthDayText,
               ]}>
                 {date.getDate()}
               </Text>
