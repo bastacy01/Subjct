@@ -20,14 +20,16 @@ export default function CoursesLayout() {
           },
           headerTintColor: 'white', // Keep back arrow white
           headerTitleStyle: {
-            color: Colors.light.primary[600], // Make title same color as background (invisible)
+            color: 'transparent', // Make title completely transparent
             fontSize: 0, // Make font size 0 to completely hide
+            opacity: 0, // Additional opacity to ensure invisibility
           },
           headerLeftContainerStyle: {
-            paddingLeft: 24, // Align with text content below
-            paddingTop: 8,
+            paddingLeft: 24, // Align with course content padding
+            paddingTop: 0, // Remove top padding for better alignment
           },
           headerBackTitleVisible: false, // Hide back button title
+          headerBackVisible: true, // Ensure back button is visible
         }}
       />
     </Stack>
