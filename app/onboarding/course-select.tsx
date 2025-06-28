@@ -164,7 +164,7 @@ export default function CourseSelectScreen() {
 
       <View style={styles.buttonContainer}>
         <Button
-          title="Continue to Dashboard"
+          title="Continue"
           disabled={selectedCourses.length === 0}
           loading={isSubmitting}
           onPress={handleFinish}
