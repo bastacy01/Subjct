@@ -68,7 +68,7 @@ export default function CalendarScreen() {
       courseCode: 'MATH 241',
       courseName: 'Calculus II',
       startTime: '11:00 AM',
-      endTime: '12:15 PM',
+      endTime: '12:05 PM',
       type: 'lecture',
     },
     {
