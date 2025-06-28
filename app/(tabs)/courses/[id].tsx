@@ -97,12 +97,14 @@ export default function CourseDetailScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.courseCode}>{course.code}</Text>
-        <Text style={styles.courseName}>{course.name}</Text>
-        <Text style={styles.instructor}>{course.instructor}</Text>
-        <Text style={styles.description}>
-          This is the section for the specific course description. Most courses include a paragraph of what to expect from the course. This will come from the LMS api provider.
-        </Text>
+        <View style={styles.courseContent}>
+          <Text style={styles.courseCode}>{course.code}</Text>
+          <Text style={styles.courseName}>{course.name}</Text>
+          <Text style={styles.instructor}>{course.instructor}</Text>
+          <Text style={styles.description}>
+            This is the section for the specific course description. Most courses include a paragraph of what to expect from the course. This will come from the LMS api provider.
+          </Text>
+        </View>
       </View>
 
       <View style={styles.content}>
@@ -176,9 +178,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    padding: 24,
-    paddingTop: 16, // Reduced from 0 to add space below the back arrow
     backgroundColor: Colors.light.primary[600],
+  },
+  courseContent: {
+    padding: 24,
+    paddingTop: 16, // This creates space below the back arrow
   },
   courseCode: {
     fontFamily: 'Inter-Bold',
