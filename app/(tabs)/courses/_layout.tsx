@@ -1,7 +1,12 @@
 import { Stack } from 'expo-router';
+import { TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
+import { ChevronLeft } from 'lucide-react-native';
 import Colors from '@/constants/Colors';
 
 export default function CoursesLayout() {
+  const router = useRouter();
+
   return (
     <Stack>
       <Stack.Screen 
@@ -13,27 +18,26 @@ export default function CoursesLayout() {
       <Stack.Screen
         name="[id]"
         options={{
-          headerTitle: "", // Empty string
+          headerTitle: "", // Empty title
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: Colors.light.primary[600],
           },
-          headerTintColor: 'white', // Keep back arrow white
-          headerTitleStyle: {
-            color: 'transparent', // Make title completely transparent
-            fontSize: 0, // Make font size 0 to completely hide
-            opacity: 0, // Additional opacity to ensure invisibility
-            width: 0, // Remove width
-            height: 0, // Remove height
-          },
-          headerLeftContainerStyle: {
-            paddingLeft: 24, // Align with course content padding
-            paddingTop: 0, // Remove top padding for better alignment
-            marginLeft: -40, // Negative margin to move arrow right and cover text
-            width: 80, // Give enough width for the arrow
-          },
-          headerBackTitleVisible: false, // Hide back button title
-          headerBackVisible: true, // Ensure back button is visible
+          headerBackVisible: false, // Hide the default back button completely
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{
+                paddingLeft: 24,
+                paddingRight: 16,
+                paddingVertical: 8,
+                marginTop: 8,
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <ChevronLeft size={24} color="white" />
+            </TouchableOpacity>
+          ),
         }}
       />
     </Stack>
