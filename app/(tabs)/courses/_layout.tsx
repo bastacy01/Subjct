@@ -28,14 +28,13 @@ export default function CoursesLayout() {
             <TouchableOpacity
               onPress={() => router.back()}
               style={{
-                paddingLeft: 4, // Align with course content below
                 paddingRight: 30,
                 paddingVertical: 12,
                 marginTop: 4,
               }}
               hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
             >
-              <ChevronLeft size={32} color="white" strokeWidth={2.5} />
+              <ChevronLeft size={30} color="white" strokeWidth={2.5} />
             </TouchableOpacity>
           ),
         }}
