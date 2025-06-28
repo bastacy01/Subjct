@@ -28,7 +28,7 @@ export default function CoursesLayout() {
             <TouchableOpacity
               onPress={() => router.back()}
               style={{
-                paddingLeft: 14, // Align with course content below
+                paddingLeft: 4, // Align with course content below
                 paddingRight: 16,
                 paddingVertical: 12,
                 marginTop: 4,
