@@ -9,10 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to allow users to take photos and videos for educational content and profile pictures."
-      }
+      "supportsTablet": true
     },
     "web": {
       "bundler": "metro",
