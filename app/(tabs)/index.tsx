@@ -166,17 +166,6 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Home</Text>
-        <TouchableOpacity 
-          style={styles.boltLogoContainer}
-          onPress={handleBoltLogoPress}
-          activeOpacity={0.7}
-        >
-          <Image 
-            source={require('@/assets/images/white_circle_360x360.png')}
-            style={styles.boltLogo}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -214,24 +203,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: 'white',
     marginTop: 10, // Add vertical offset to move text down
-  },
-  boltLogoContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
-    marginTop: 5,
-  },
-  boltLogo: {
-    width: 38,
-    height: 38,
   },
   lecturesContainer: {
     padding: 16,
