@@ -56,7 +56,7 @@ export default function LmsAuthScreen() {
     setLoginError('');
     
     // Validate credentials
-    if (demoEmail !== 'demo@university.edu' || demoPassword !== 'bolt') {
+    if (demoEmail !== 'demo@university.edu' || demoPassword !== '1234') {
       setLoginError('Invalid email or password. Please try again.');
       return;
     }
