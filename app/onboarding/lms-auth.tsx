@@ -253,8 +253,7 @@ export default function LmsAuthScreen() {
               title="Back"
               variant="outline"
               onPress={() => router.back()}
-              style={[styles.button, styles.secondaryButton]}
-              textStyle={styles.secondaryButtonText}
+              style={styles.button}
             />
           </View>
         </>
